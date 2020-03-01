@@ -7,10 +7,10 @@ const useStyles = () => ({
     width: "100%",
     backgroundColor: "orange",
     height: "8rem",
+    alignItems: "center"
   },
   search: {
-    width: "25%",
-    alignItems: "center"
+    width: "100%",
   }
 })
 

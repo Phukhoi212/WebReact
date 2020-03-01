@@ -1,14 +1,21 @@
 import React from 'react';
+import { withStyles } from "@material-ui/core/styles";
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 
+const useStyles = () => ({
+    root: {
+        width: "25%",
+    }
+});      
 
 class Search extends React.Component {
   render () {
+      const { classes } = this.props;
     return (
-      <Paper className="paper-search shadow-card-2 ">
+      <Paper className={classes.root}>
         <InputBase
           className="search-input"
           placeholder="Search"
@@ -22,4 +29,4 @@ class Search extends React.Component {
   }
 }
 
-export default Search
+export default withStyles(useStyles)(Search);
