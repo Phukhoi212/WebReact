@@ -16,11 +16,14 @@ class NavBar extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <img
-          alt="vhg"
-          src={logo}
-          style={{ height: '3rem', width: '5rem', float: "left", marginLeft: "2rem" }}
-        />
+        <a href="/">
+          <img
+            alt="vhg"
+            src={logo}
+            style={{ height: '3.5rem', width: '5.3rem', float: "left", marginLeft: "2rem" }}
+          />
+        </a>
+
 
       </div>
     );

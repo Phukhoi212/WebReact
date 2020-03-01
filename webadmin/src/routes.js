@@ -1,8 +1,9 @@
 import React from 'react';
 import Login from './containers/Login/Login';
-//import DashBoard from './containers/DashBoard/DashBoard';
+import DashBoard from './containers/DashBoard/DashBoard';
 import Home from './containers/Home/Home';
-import SignUp from './containers/Login/SignUp'
+import SignUp from './containers/Login/SignUp';
+import Detail from './containers/Details';
 
 
 
@@ -23,6 +24,16 @@ const routes = [
         path: '/login',
         exact: true,
         main: () => <Login />
+    },
+    {
+        path: '/detail',
+        exact: true,
+        main: () => <Detail />
+    },
+    {
+        path: '/dashboard',
+        exact: true,
+        main: () => <DashBoard />
     }
 
 ];
