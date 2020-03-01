@@ -1,6 +1,7 @@
 import React from 'react';
 import Login from './containers/Login/Login';
-import DashBoard from './containers/DashBoard/DashBoard';
+//import DashBoard from './containers/DashBoard/DashBoard';
+import Home from './containers/Home/Home';
 import SignUp from './containers/Login/SignUp'
 
 
@@ -9,7 +10,7 @@ const routes = [
     {
         path : '/',
         exact : true,
-        main : () => <DashBoard />
+        main : () => <Home />
     },
 
     {
