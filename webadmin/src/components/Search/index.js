@@ -8,6 +8,8 @@ import SearchIcon from '@material-ui/icons/Search';
 const useStyles = () => ({
     root: {
         width: "25%",
+        marginLeft: "auto",
+        marginRight: "auto",
     }
 });      
 
