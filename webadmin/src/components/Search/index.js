@@ -6,24 +6,32 @@ import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 
 const useStyles = () => ({
-    root: {
-        width: "25%",
-        marginLeft: "auto",
-        marginRight: "auto",
-    }
-});      
+  root: {
+    width: "40%",
+    borderRadius: 0,
+    display: "flex",
+  },
+  search_input: {
+    width: "90%",
+    paddingLeft: "1rem",
+  },
+  search_icon: {
+    backgroundColor: "#d9d9d9",
+    borderRadius: 0,
+    width: "10%",
+  }
+});
 
 class Search extends React.Component {
-  render () {
-      const { classes } = this.props;
+  render() {
+    const { classes } = this.props;
     return (
       <Paper className={classes.root}>
         <InputBase
-          className="search-input"
+          className={classes.search_input}
           placeholder="Search"
-          inputProps={{ 'aria-label': 'search google maps' }}
         />
-        <IconButton className="search-icon" aria-label="search">
+        <IconButton className={classes.search_icon} aria-label="search">
           <SearchIcon />
         </IconButton>
       </Paper>

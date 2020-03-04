@@ -3,6 +3,7 @@ import { withStyles } from "@material-ui/core";
 import Container from '@material-ui/core/Container';
 import NavBar from "../../components/NavBar";
 import Header from "../../components/Header";
+import dat from "../../images/dat4.jpg";
 
 const useStyles = () => ({
   root: {
@@ -16,7 +17,6 @@ const useStyles = () => ({
   image: {
     width: "30%",
     height: "20rem",
-    backgroundColor: "green",
     marginTop: "2rem"
   }
 })
@@ -32,7 +32,11 @@ class Detail extends React.Component {
         <Container maxWidth="lg" style={{ padding: 0 }}>
           <div className={classes.container}>
             <div className={classes.image}>
-
+              <img
+                alt="vhg"
+                src={dat}
+                style={{ width: "100%", height: 'inherit' }}
+              />
             </div>
           </div>
 
