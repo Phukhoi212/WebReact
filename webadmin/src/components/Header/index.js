@@ -47,7 +47,6 @@ class Header extends React.Component {
           </IconButton>
 
         </div>
-
       </div>
     );
   }

@@ -2,7 +2,7 @@ import React from 'react';
 import Login from './containers/Login/Login';
 import DashBoard from './containers/DashBoard/DashBoard';
 import Home from './containers/Home/Home';
-import SignUp from './containers/Login/SignUp';
+import SignUp from './containers/SignUp/SignUp';
 import Detail from './containers/Details';
 
 

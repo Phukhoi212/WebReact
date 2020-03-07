@@ -33,6 +33,10 @@ const useStyles = theme => ({
 });
 
 class Login extends React.Component {
+  state = {
+    userName: "",
+    password: "",
+  }
   render() {
     const { classes } = this.props;
     return (
@@ -56,6 +60,7 @@ class Login extends React.Component {
               name="email"
               autoComplete="email"
               autoFocus
+              value={this.state.userName}
             />
             <TextField
               variant="outlined"
@@ -67,6 +72,7 @@ class Login extends React.Component {
               type="password"
               id="password"
               autoComplete="current-password"
+              value={this.state.password}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

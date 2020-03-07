@@ -5,7 +5,6 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-//import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
@@ -16,10 +15,10 @@ import Paper from "@material-ui/core/Paper";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-// import { mainListItems, secondaryListItems } from "./listItems";
-//import Chart from "./Chart";
-// import Deposits from "./Deposits";
-// import Orders from "./Orders";
+import compose from "recompose/compose";
+import { connect } from "react-redux";
+import { getListUser } from "./actions";
+
 
 const drawerWidth = 240;
 
@@ -106,19 +105,24 @@ class Dashboard extends React.Component {
   state = {
     open: false,
   }
-    handleDrawerOpen = () => {
-      this.setState({
-        open: true
-      })
-    };
-    handleDrawerClose = () => {
-      this.setState({
-        open: false
-      })
-    };
-    
+
+  componentDidMount() {
+    this.props.getListUser();
+  }
+  handleDrawerOpen = () => {
+    this.setState({
+      open: true
+    })
+  };
+  handleDrawerClose = () => {
+    this.setState({
+      open: false
+    })
+  };
+
 
   render() {
+    console.log("props", this.props.userList);
     const { classes } = this.props;
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     return (
@@ -209,4 +213,16 @@ class Dashboard extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(Dashboard)
+const mapStateToProps = state => {
+  return {
+    userList: state.DashboardReducer,
+  };
+};
+
+export default
+  compose(
+    withStyles(useStyles),
+    connect(mapStateToProps, {
+      getListUser,
+    })
+  )(Dashboard);

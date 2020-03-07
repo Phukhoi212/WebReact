@@ -42,7 +42,7 @@ class Footer extends React.Component {
 
         <div className={classes.contact}>
           <p style={{ fontSize: "1.2rem", fontWeight: "bold" }}>Liên Hệ: </p>
-          <p> <PhoneIcon fontSize="small" />0909654789</p>
+          <p><PhoneIcon fontSize="small" />0909654789</p>
           <p><MailOutlineIcon fontSize="small" />tdk@mail.com</p>
           <p><LocationOnIcon fontSize="small" /> 475A, Điện Biên Phủ, quận Bình Thạnh, TP. HCM</p>
         </div>
