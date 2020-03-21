@@ -17,10 +17,21 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import compose from "recompose/compose";
 import { connect } from "react-redux";
-import { getListUser } from "./actions";
+import { getListEmployees } from "./actions";
+import Table from "../../components/Table";
 
 
 const drawerWidth = 240;
+
+const columns = [
+  { title: 'Mã Admin', field: 'MA_ADMIN' },
+  { title: 'Tên Admin', field: 'TEN_ADMIN' },
+  { title: 'Ngày Sinh', field: 'NGAY_SINH' },
+  { title: 'Email', field: 'EMAIL' },
+  { title: 'Số Điện Thoại', field: 'SDT' },
+  { title: 'Tên Đăng Nhập', field: 'TEN_DN' },
+  { title: 'Mật Khẩu', field: 'MATKHAU' },
+];
 
 const useStyles = theme => ({
   root: {
@@ -104,10 +115,11 @@ const useStyles = theme => ({
 class Dashboard extends React.Component {
   state = {
     open: false,
+    adminList: [],
   }
 
   componentDidMount() {
-    this.props.getListUser();
+    this.props.getListEmployees();
   }
   handleDrawerOpen = () => {
     this.setState({
@@ -120,10 +132,10 @@ class Dashboard extends React.Component {
     })
   };
 
-
   render() {
-    console.log("props", this.props.userList);
-    const { classes } = this.props;
+    const { classes, employeeList } = this.props;
+    const adminList = employeeList.map(admin => admin);
+    console.log("list", adminList);
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     return (
       <div className={classes.root}>
@@ -202,7 +214,7 @@ class Dashboard extends React.Component {
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
                   {/* <Orders /> */}
-                  Table
+                  <Table title="Bảng Nhân Viên" dataTable={adminList} columns={columns} />
                 </Paper>
               </Grid>
             </Grid>
@@ -215,7 +227,7 @@ class Dashboard extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    userList: state.DashboardReducer,
+    employeeList: state.DashboardReducer.employeeList,
   };
 };
 
@@ -223,6 +235,6 @@ export default
   compose(
     withStyles(useStyles),
     connect(mapStateToProps, {
-      getListUser,
+      getListEmployees,
     })
   )(Dashboard);

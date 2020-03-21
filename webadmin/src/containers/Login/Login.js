@@ -1,4 +1,6 @@
 import React from "react";
+import compose from "recompose/compose";
+import { connect } from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -106,4 +108,7 @@ class Login extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(Login)
+export default compose(
+  withStyles(useStyles),
+  connect(null, {})
+)(Login);
