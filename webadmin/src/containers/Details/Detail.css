@@ -1,0 +1,25 @@
+.MuiIconButton-root {
+    border-radius: 0 !important;
+}
+
+.MuiRating-sizeLarge {
+    font-size: 36px !important;
+}
+.MuiRating-sizeSmall {
+    font-size: 20px !important;
+}
+.MuiButton-root {
+    border-radius: 0 !important;
+}
+
+.MuiLinearProgress-root {
+    height: 8px !important;
+}
+
+.MuiLinearProgress-colorPrimary {
+    background-color: #eff0f5 !important;
+}
+
+.MuiLinearProgress-barColorPrimary {
+    background-color: #ffb400 !important;
+}
