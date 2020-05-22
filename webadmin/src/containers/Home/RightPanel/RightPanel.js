@@ -34,6 +34,9 @@ class RightPanel extends React.Component {
           <CardComponent />
           <CardComponent />
           <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
         </div>
       </div>
     );

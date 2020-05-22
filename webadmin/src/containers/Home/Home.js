@@ -1,15 +1,16 @@
 import React from "react";
 import { withStyles } from "@material-ui/core";
 import NavBar from "../../components/NavBar";
-import LeftPanel from "./LeftPanel/LeftPanel";
-import RightPanel from "./RightPanel/RightPanel";
+import Sales from "../Sales";
+import SlideShow from "../../components/Slide";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
 const useStyles = () => ({
   root: {
     width: "100%",
-    height: "100vh"
+    height: "auto",
+    backgroundColor: "#eff0f5",
   },
   navBar: {
     display: "block",
@@ -21,13 +22,15 @@ const useStyles = () => ({
   header: {
     display: "block"
   },
-  left: {
-    width: "20%",
-    display: "block",
+  slide: {
+    width: "100%",
+    height: 300,
+    marginBottom: "2rem"
   },
-  right: {
-    width: "80%",
-    display:"block",
+  sales: {
+    width: "100%",
+    height: 350,
+    marginBottom: "1rem"
   },
   footer: {
     display: "block"
@@ -46,13 +49,19 @@ class Home extends React.Component {
         <div className={classes.header}>
           <Header />
         </div>
+        <div className={classes.slide}>
+          <SlideShow />
+        </div>
+        <div className={classes.sales}>
+          <Sales />
+        </div>
         <div className={classes.container}>
-          <div className={classes.left}>
+          {/* <div className={classes.left}>
             <LeftPanel />
-          </div>
-          <div className={classes.right}>
+          </div> */}
+          {/* <div className={classes.right}>
             <RightPanel />
-          </div>
+          </div> */}
 
         </div>
         <div className={classes.footer}>

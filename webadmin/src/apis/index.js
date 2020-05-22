@@ -1,6 +1,6 @@
 import axios from "axios";
 //import { removeLocalStorage, getLocalStorage, STORE_KEYS } from "./utils/tools";
-import history from "../history";
+//import history from "../history";
 
 //const REACT_APP_URL = process.env.REACT_APP_URL;
 
@@ -19,35 +19,35 @@ const DEFAULT_RESULT = { code: 100, message: undefined };
 //   }
 // };
 
-// const post = async (URL, data) => {
-//   const accessToken = getLocalStorage(STORE_KEYS.ACCESS_TOKEN, []);
+const post = async (URL, data) => {
+  //const accessToken = getLocalStorage(STORE_KEYS.ACCESS_TOKEN, []);
 
-//   let result = DEFAULT_RESULT;
-//   try {
-//     result = await axiosInstance.post(URL, data, {
-//       headers: { Authorization: `Bearer ${accessToken}` },
-//     });
-//   } catch (error) {
-//     console.log("post error:", error);
-//     validateAccessToken(error.message);
-//   }
-//   return result;
-// };
+  let result = DEFAULT_RESULT;
+  try {
+    result = await axiosInstance.post(URL, data, {
+      // headers: { Authorization: `Bearer ${accessToken}` },
+    });
+  } catch (error) {
+    console.log("post error:", error);
+    //validateAccessToken(error.message);
+  }
+  return result;
+};
 
-// const put = async (URL, data) => {
-//   const accessToken = getLocalStorage(STORE_KEYS.ACCESS_TOKEN, []);
+const put = async (URL, data) => {
+  //const accessToken = getLocalStorage(STORE_KEYS.ACCESS_TOKEN, []);
 
-//   let result = DEFAULT_RESULT;
-//   try {
-//     result = await axiosInstance.put(URL, data, {
-//       headers: { Authorization: `Bearer ${accessToken}` },
-//     });
-//   } catch (error) {
-//     console.log("post error:", error);
-//     validateAccessToken(error.message);
-//   }
-//   return result;
-// };
+  let result = DEFAULT_RESULT;
+  try {
+    result = await axiosInstance.put(URL, data, {
+      //headers: { Authorization: `Bearer ${accessToken}` },
+    });
+  } catch (error) {
+    console.log("post error:", error);
+    //validateAccessToken(error.message);
+  }
+  return result;
+};
 
 const get = async (URL, params = {}) => {
   let result = DEFAULT_RESULT;
@@ -62,20 +62,20 @@ const get = async (URL, params = {}) => {
   return result;
 };
 
-// const axiosDelete = async (URL, data = []) => {
-//   const accessToken = getLocalStorage(STORE_KEYS.ACCESS_TOKEN, []);
-//   let result = DEFAULT_RESULT;
-//   try {
-//     result = await axiosInstance.delete(URL, {
-//       data,
-//       headers: { Authorization: `Bearer ${accessToken}` },
-//     });
-//   } catch (error) {
-//     console.log("delete error:", error.message);
-//     validateAccessToken(error.message);
-//   }
+const axiosDelete = async (URL, data = []) => {
+  //const accessToken = getLocalStorage(STORE_KEYS.ACCESS_TOKEN, []);
+  let result = DEFAULT_RESULT;
+  try {
+    result = await axiosInstance.delete(URL, {
+      data,
+      //headers: { Authorization: `Bearer ${accessToken}` },
+    });
+  } catch (error) {
+    console.log("delete error:", error.message);
+    //validateAccessToken(error.message);
+  }
 
-//   return result;
-// };
+  return result;
+};
 
-export { get };
+export { get, axiosDelete, post, put };

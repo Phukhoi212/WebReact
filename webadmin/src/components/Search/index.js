@@ -29,7 +29,7 @@ class Search extends React.Component {
       <Paper className={classes.root}>
         <InputBase
           className={classes.search_input}
-          placeholder="Search"
+          placeholder="Nhập tên sản phẩm..."
         />
         <IconButton className={classes.search_icon} aria-label="search">
           <SearchIcon />

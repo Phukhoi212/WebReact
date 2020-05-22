@@ -1,8 +1,10 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
 import logo from "../../images/logo.png";
-import { IconButton, Menu, MenuItem } from '@material-ui/core';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import { Button } from "@material-ui/core";
+//import { IconButton, Menu, MenuItem } from '@material-ui/core';
+//import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+
 
 const useStyles = () => ({
   root: {
@@ -14,6 +16,14 @@ const useStyles = () => ({
   user: {
     width: "90%",
     height: "auto",
+  },
+  bt_group: {
+    float: "right",
+    width: "15%",
+    paddingTop: 7,
+  },
+  button: {
+    color: "#fff",
   }
 });
 
@@ -35,7 +45,6 @@ class NavBar extends React.Component {
   };
 
   render() {
-    console.log("props", this.props);
     const { classes } = this.props;
     return (
       <div className={classes.root}>
@@ -47,7 +56,7 @@ class NavBar extends React.Component {
           />
         </a>
         <div className={classes.user}>
-          <IconButton onClick={this.onClickUser} style={{ backgroundColor: "#ffff", float: "right" }} size="medium" color="secondary">
+          {/* <IconButton onClick={this.onClickUser} style={{ backgroundColor: "#ffff", float: "right" }} size="medium" color="secondary">
             <AccountCircleIcon />
           </IconButton>
           <Menu
@@ -60,7 +69,11 @@ class NavBar extends React.Component {
             <MenuItem onClick={this.handleClose}>Profile</MenuItem>
             <MenuItem onClick={this.handleClose}>My account</MenuItem>
             <MenuItem><a href="/login">Logout</a></MenuItem>
-          </Menu>
+          </Menu> */}
+          <div className={classes.bt_group}>
+            <Button variant="text" className={classes.button}>Đăng nhập</Button>|
+            <Button variant="text" className={classes.button}>Đăng ký</Button>
+          </div>
         </div>
 
 

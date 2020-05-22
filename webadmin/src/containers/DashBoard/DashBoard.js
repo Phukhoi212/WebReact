@@ -1,4 +1,5 @@
 import React from "react";
+import MaterialTable from 'material-table';
 import clsx from "clsx";
 import { withStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -18,19 +19,19 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import compose from "recompose/compose";
 import { connect } from "react-redux";
 import { getListEmployees } from "./actions";
-import Table from "../../components/Table";
+//import Table from "../../components/Table";
 
 
 const drawerWidth = 240;
 
 const columns = [
-  { title: 'Mã Admin', field: 'MA_ADMIN' },
-  { title: 'Tên Admin', field: 'TEN_ADMIN' },
-  { title: 'Ngày Sinh', field: 'NGAY_SINH' },
-  { title: 'Email', field: 'EMAIL' },
+  { title: 'Tên Admin', field: 'Ten_AD' },
+  { title: 'Email', field: 'Email' },
+  { title: 'Ngày Sinh', field: 'NgaySinh' },
   { title: 'Số Điện Thoại', field: 'SDT' },
-  { title: 'Tên Đăng Nhập', field: 'TEN_DN' },
-  { title: 'Mật Khẩu', field: 'MATKHAU' },
+  { title: 'Địa Chỉ', field: 'DiaChi' },
+  { title: 'Tên Đăng Nhập', field: 'TenDangNhap' },
+  { title: 'Mật Khẩu', field: 'MatKhau' },
 ];
 
 const useStyles = theme => ({
@@ -113,14 +114,20 @@ const useStyles = theme => ({
 });
 
 class Dashboard extends React.Component {
-  state = {
-    open: false,
-    adminList: [],
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [],
+    }
   }
 
   componentDidMount() {
     this.props.getListEmployees();
   }
+  componentWillReceiveProps(nextProps) {
+    this.setState({ data: nextProps.employeeList })
+  }
+
   handleDrawerOpen = () => {
     this.setState({
       open: true
@@ -132,10 +139,24 @@ class Dashboard extends React.Component {
     })
   };
 
+  // onRowUpdate = (newData, oldData) =>
+  //   new Promise(resolve => {
+  //     let copyArray = this.props.employeeList.slice();
+  //     setTimeout(() => {
+  //       resolve();
+  //       if (oldData) {
+  //         this.setState((prevState) => {
+  //           const data = [...prevState.data];
+  //           data[data.indexOf(oldData)] = newData;
+  //           return { ...prevState, data };
+  //         });
+  //       }
+  //     }, 600);
+  //   });
+
+
   render() {
-    const { classes, employeeList } = this.props;
-    const adminList = employeeList.map(admin => admin);
-    console.log("list", adminList);
+    const { classes } = this.props;
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     return (
       <div className={classes.root}>
@@ -214,7 +235,51 @@ class Dashboard extends React.Component {
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
                   {/* <Orders /> */}
-                  <Table title="Bảng Nhân Viên" dataTable={adminList} columns={columns} />
+                  {/* <Table title="Bảng Nhân Viên" dataTable={adminList} columns={columns} /> */}
+                  <MaterialTable
+                    title="Bảng Nhân Viên"
+                    columns={columns}
+                    data={this.state.data}
+                    editable={{
+                      onRowAdd: (newData) =>
+                        new Promise((resolve) => {
+                          setTimeout(() => {
+                            resolve();
+                            this.setState((prevState) => {
+                              const data = [...prevState.data];
+                              data.push(newData);
+                              return { ...prevState, data };
+                            });
+                          }, 600);
+                        }),
+                      onRowUpdate: (newData, oldData) =>
+                        new Promise((resolve) => {
+                          setTimeout(() => {
+                            resolve();
+                            if (oldData) {
+                              this.setState((prevState) => {
+                                const data = [...prevState.data];
+                                console.log("==>dataEdit", data);
+                                data[data.indexOf(oldData)] = newData;
+                                console.log("==>prevData", data[data.indexOf(oldData)]);
+                                return { ...prevState, data };
+                              });
+                            }
+                          }, 600);
+                        }),
+                      onRowDelete: (oldData) =>
+                        new Promise((resolve) => {
+                          setTimeout(() => {
+                            resolve();
+                            this.setState((prevState) => {
+                              const data = [...prevState.data];
+                              data.splice(data.indexOf(oldData), 1);
+                              return { ...prevState, data };
+                            });
+                          }, 600);
+                        }),
+                    }}
+                  />
                 </Paper>
               </Grid>
             </Grid>

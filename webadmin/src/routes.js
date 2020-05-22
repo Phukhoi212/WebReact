@@ -4,6 +4,7 @@ import DashBoard from './containers/DashBoard/DashBoard';
 import Home from './containers/Home/Home';
 import SignUp from './containers/SignUp/SignUp';
 import Detail from './containers/Details';
+import Admin from './containers/Manager/Admin';
 
 
 
@@ -34,6 +35,11 @@ const routes = [
         path: '/dashboard',
         exact: true,
         main: () => <DashBoard />
+    },
+    {
+        path: '/admins',
+        exact: true,
+        main: () => <Admin />,
     }
 
 ];
