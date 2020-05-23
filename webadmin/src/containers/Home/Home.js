@@ -33,7 +33,6 @@ const useStyles = () => ({
     marginBottom: "1rem"
   },
   footer: {
-    display: "block"
   }
 })
 
@@ -51,6 +50,15 @@ class Home extends React.Component {
         </div>
         <div className={classes.slide}>
           <SlideShow />
+        </div>
+        <div className={classes.sales}>
+          <Sales />
+        </div>
+        <div className={classes.sales}>
+          <Sales />
+        </div>
+        <div className={classes.sales}>
+          <Sales />
         </div>
         <div className={classes.sales}>
           <Sales />

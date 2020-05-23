@@ -14,6 +14,8 @@ import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import PaymentIcon from '@material-ui/icons/Payment';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import rau from "../../images/rau.jpg";
 import "./Detail.css";
 
@@ -161,7 +163,8 @@ const useStyles = () => ({
 class Detail extends React.Component {
   state = {
     number: 1,
-    name: "2g Hạt Giống Rau Tía Tô (Perilla frutescens)"
+    name: "2g Hạt Giống Rau Tía Tô (Perilla frutescens)",
+    like: false,
   }
 
   onClickAddIcon = () => {
@@ -172,9 +175,15 @@ class Detail extends React.Component {
     this.setState({ number: this.state.number - 1 })
   }
 
+  onClickLikeButton = () => {
+    this.setState({
+      like: !this.state.like,
+    })
+  }
+
   render() {
     const { classes } = this.props;
-    const { number, name } = this.state;
+    const { number, name, like } = this.state;
     const mota = "2g Hạt Giống Rau Tía Tô (Perilla frutescens)sinh trưởng khỏe độ đồng đều cao trồng được quanh năm tỷ lệ nảy mầm cao kháng bệnh tốt";
     const alert = "Sản phẩm này là tài sản cá nhân được bán bởi Nhà Bán Hàng Cá Nhân và không thuộc đối tượng phải chịu thuế GTGT. Do đó hóa đơn VAT không được cấp trong trường hợp này."
     return (
@@ -465,7 +474,52 @@ class Detail extends React.Component {
                     </div>
                   </div>
                 </div>
+
+
+                {/*Filter comment*/}
+                <div style={{ width: "100%", backgroundColor: "#fafafa", height: 50, lineHeight: "50px" }}>
+                  <div style={{ paddingLeft: 20, textAlign: "start", fontWeight: "bold" }}>
+                    Đánh giá sản phẩm: {name}
+                  </div>
+                </div>
+
+                <div style={{ width: "100%", backgroundColor: "#fff", height: "auto", marginTop: 20, display: "flex" }}>
+                  <div style={{ width: "30%", textAlign: "start", paddingLeft: 20 }}>
+                    <div>
+                      <Rating value={4} readOnly size="small" />
+                    </div>
+                    <div>
+                      <label style={{ fontSize: 12, marginLeft: 5 }}>bởi: Khoa Trần</label>
+                    </div>
+                  </div>
+                  <div style={{ width: "70%", textAlign: "end" }}>
+                    <label style={{ fontSize: 12, marginRight: 20 }}>06 thg 6 2020</label>
+                  </div>
+                </div>
+
+                <div style={{ width: "100%", backgroundColor: "#fff", height: "auto", marginTop: 20, textAlign: "start" }}>
+                  <label style={{ paddingLeft: 22 }}>This is test comment for product</label>
+                </div>
+
+                <div style={{ width: "100%", backgroundColor: "#fff", marginTop: 20, display: "flex", paddingBottom: 20 }}>
+                  <div style={{ width: "30%", textAlign: "start", paddingLeft: 20 }}>
+                    <IconButton size="small" onClick={this.onClickLikeButton} color={like ? "primary" : "default"}>
+                      <ThumbUpAltIcon />
+                    </IconButton>
+                    0
+                  </div>
+
+                  <div style={{ width: "70%", textAlign: "end" }}>
+                    <IconButton size="small">
+                      <MoreVertIcon />
+                    </IconButton>
+                  </div>
+                </div>
+
+
+                {/** */}
               </div>
+
 
 
               <div className={classes.right_info}></div>
