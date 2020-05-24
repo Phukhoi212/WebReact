@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import routes from '../routes';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import history from '../history';
 
 class App extends React.Component{
   showContentMenus = routes => {
@@ -14,6 +15,7 @@ class App extends React.Component{
             path={route.path}
             exact={route.exact}
             component={route.main}
+            history={history}
           />
         );
       });

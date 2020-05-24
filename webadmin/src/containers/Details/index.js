@@ -1,4 +1,5 @@
 import React from "react";
+import { Redirect } from 'react-router-dom';
 import { withStyles, IconButton, Button } from "@material-ui/core";
 import Rating from '@material-ui/lab/Rating';
 import NavBar from "../../components/NavBar";
@@ -181,6 +182,9 @@ class Detail extends React.Component {
     })
   }
 
+  onClickMuaHang = () => {
+  }
+
   render() {
     const { classes } = this.props;
     const { number, name, like } = this.state;
@@ -255,6 +259,7 @@ class Detail extends React.Component {
                     style={{ marginRight: 5, backgroundColor: "#ffb916", color: "#fff" }}
                     fullWidth
                     variant="contained"
+                    onClick={() => <Redirect to="/detail/buy" />}
                   >
                     Mua Ngay
                 </Button>

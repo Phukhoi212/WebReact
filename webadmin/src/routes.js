@@ -4,6 +4,7 @@ import DashBoard from './containers/DashBoard/DashBoard';
 import Home from './containers/Home/Home';
 import SignUp from './containers/SignUp/SignUp';
 import Detail from './containers/Details';
+import BuyProduct from './containers/BuyProduct';
 import Admin from './containers/Manager/Admin';
 
 
@@ -30,6 +31,11 @@ const routes = [
         path: '/detail',
         exact: true,
         main: () => <Detail />
+    },
+    {
+        path: '/detail/buy',
+        exact: true,
+        main: () => <BuyProduct />
     },
     {
         path: '/dashboard',
