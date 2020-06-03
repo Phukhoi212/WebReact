@@ -23,7 +23,7 @@ const routes = [
     },
 
     {
-        path: '/login',
+        path: '/admins/login',
         exact: true,
         main: () => <Login />
     },

@@ -1,8 +1,9 @@
 import React from "react";
-import { Redirect } from 'react-router-dom';
+import compose from "recompose/compose";
+import { connect } from "react-redux";
+import { getListProduct, getProductById } from "./actions";
 import { withStyles, IconButton, Button } from "@material-ui/core";
 import Rating from '@material-ui/lab/Rating';
-import NavBar from "../../components/NavBar";
 import Header from "../../components/Header";
 import ShareIcon from '@material-ui/icons/Share';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
@@ -17,7 +18,6 @@ import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import rau from "../../images/rau.jpg";
 import "./Detail.css";
 
 const useStyles = () => ({
@@ -31,17 +31,19 @@ const useStyles = () => ({
     height: "auto",
     margin: "0 auto",
     display: "flex",
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
+    marginBottom: 20
   },
   left: {
     width: "25%",
     height: "auto"
   },
   image: {
-    width: "100%",
+    width: "90%",
     height: 300,
     borderBottom: "1px solid #ebebeb",
-    lineHeight: 30,
+    lineHeight: "300px",
+    margin: "0 auto",
   },
   center: {
     width: "50%",
@@ -145,7 +147,8 @@ const useStyles = () => ({
     width: "80%",
     height: "auto",
     margin: "0 auto",
-    display: "flex"
+    display: "flex",
+    paddingBottom: 50
   },
   rating_content: {
     width: "80%",
@@ -168,6 +171,13 @@ class Detail extends React.Component {
     like: false,
   }
 
+  componentDidMount() {
+    window.scrollTo(0, 0);
+    this.props.getListProduct();
+    const id = this.props.match.params.id;
+    this.props.getProductById(id);
+  }
+
   onClickAddIcon = () => {
     this.setState({ number: this.state.number + 1 })
   }
@@ -183,25 +193,24 @@ class Detail extends React.Component {
   }
 
   onClickMuaHang = () => {
+    this.props.history.push({ pathname: '/detail/buy' });
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, product } = this.props;
     const { number, name, like } = this.state;
-    const mota = "2g Hạt Giống Rau Tía Tô (Perilla frutescens)sinh trưởng khỏe độ đồng đều cao trồng được quanh năm tỷ lệ nảy mầm cao kháng bệnh tốt";
     const alert = "Sản phẩm này là tài sản cá nhân được bán bởi Nhà Bán Hàng Cá Nhân và không thuộc đối tượng phải chịu thuế GTGT. Do đó hóa đơn VAT không được cấp trong trường hợp này."
     return (
       <div className={classes.root}>
-        <NavBar />
         <Header />
         {/* Container */}
-        <div style={{ width: "100%" }}>
+        <div style={{ width: "100%", marginTop: 25 }}>
           <div className={classes.container}>
             <div className={classes.left}>
               <div className={classes.image}>
                 <img
                   alt="vhg"
-                  src={rau}
+                  src={product.Image_Url}
                   style={{ width: "100%", height: "auto" }}
                 />
               </div>
@@ -209,7 +218,7 @@ class Detail extends React.Component {
 
             <div className={classes.center}>
               <div className={classes.description}>
-                <label className={classes.text_description}>{mota}</label>
+                <label className={classes.text_description}>{product.TenSanPham}</label>
               </div>
 
               <div className={classes.rating_and_share}>
@@ -236,7 +245,7 @@ class Detail extends React.Component {
 
               <div className={classes.price}>
                 <div className={classes.price_detail}>
-                  <span style={{ color: "#f57224", fontSize: 30 }}>7.000</span>
+                  <span style={{ color: "#f57224", fontSize: 30 }}>{product.GiaSanPham}</span>
                 </div>
               </div>
 
@@ -247,7 +256,7 @@ class Detail extends React.Component {
                     <RemoveIcon />
                   </IconButton>
                   <span style={{ paddingLeft: 20, paddingRight: 20 }}>{number}</span>
-                  <IconButton size="small" style={{ backgroundColor: "#eff0f5" }} onClick={this.onClickAddIcon}>
+                  <IconButton disabled={number === product.SoLuong} size="small" style={{ backgroundColor: "#eff0f5" }} onClick={this.onClickAddIcon}>
                     <AddIcon />
                   </IconButton>
                 </div>
@@ -259,7 +268,7 @@ class Detail extends React.Component {
                     style={{ marginRight: 5, backgroundColor: "#ffb916", color: "#fff" }}
                     fullWidth
                     variant="contained"
-                    onClick={() => <Redirect to="/detail/buy" />}
+                    onClick={this.onClickMuaHang}
                   >
                     Mua Ngay
                 </Button>
@@ -277,7 +286,7 @@ class Detail extends React.Component {
               <div className={classes.right_location}>
                 {/*Tùy chỉnh location*/}
                 <div style={{ width: "100%", textAlign: "start", paddingBottom: 15 }}>
-                  <label style={{ fontSize: 13, fontWeight: "bold" }}>Tùy chọn giao hàng</label>
+                  <label style={{ fontSize: 14, fontWeight: "bold" }}>Tùy chọn giao hàng</label>
                   <span style={{ float: "right" }}>
                     <IconButton size="small">
                       <ErrorOutlineIcon />
@@ -338,7 +347,7 @@ class Detail extends React.Component {
                     <div style={{ fontSize: 12 }}>Được bán bởi</div>
                     <div style={{ color: "blue" }}>Anh Dũng Shop</div>
                   </div>
-                  <div style={{ width: "50%" }}>
+                  <div style={{ width: "50%", textAlign: "center" }}>
                     <IconButton size="small">
                       <QuestionAnswerIcon style={{ color: "#199cb7" }} />
                       <label style={{ color: "#199cb7", fontSize: 14 }}>Trò chuyện</label>
@@ -346,7 +355,7 @@ class Detail extends React.Component {
                   </div>
                 </div>
                 {/*đánh giá của shop */}
-                <div style={{ width: "100%", display: "flex", paddingBottom: 15 }}>
+                <div style={{ width: "100%", display: "flex", paddingBottom: 15, textAlign: "center" }}>
                   <div style={{ width: "33.33%", border: "1px solid #eff0f5" }}>
                     <div style={{ fontSize: 12, marginTop: 10 }}>Đánh giá tích cực</div>
                     <div style={{ fontSize: 30, marginTop: 20, marginBottom: 15 }}>98%</div>
@@ -361,7 +370,7 @@ class Detail extends React.Component {
                   </div>
                 </div>
                 {/*Go to Shop */}
-                <div style={{ width: "100%" }}>
+                <div style={{ width: "100%", textAlign: "center" }}>
                   <Button style={{ color: "blue" }} variant="text">Đến Gian Hàng</Button>
                 </div>
               </div>
@@ -388,19 +397,16 @@ class Detail extends React.Component {
               {/*Thong tin san pham */}
               <div style={{ width: "100%", marginTop: 15 }}>
                 <div style={{ paddingLeft: 20, paddingRight: 20, textAlign: "justify" }}>
-                  Hạt Giống Rau Quế Lá To:cho cây lớn, lá lớn, tròn, dài
-                  Thân màu tím, lá màu xanh mướt, có mùi thơm dễ chịu
-                  Thời vụ gieo trồng: quanh năm,.
-                  Thu hoạch rau quế 30-35 ngày sau khi gieo
+                  {product.Mota}
                 </div>
                 <div style={{ width: "50%", margin: "0 auto", marginTop: 20 }}>
-                  <img style={{ width: "100%" }} alt="" src={rau} />
+                  <img style={{ width: "100%" }} alt="" src={product.Image_Url} />
                 </div>
               </div>
               {/*Chi tiet*/}
               <div style={{ width: "100%", marginTop: 20 }}>
                 <div style={{ paddingLeft: 20, textAlign: "start", fontWeight: "bold" }}>
-                  Đặc tính sản phẩm: {name}
+                  Đặc tính sản phẩm: {product.TenSanPham}
                 </div>
                 <div style={{ width: "100%", textAlign: "start", paddingLeft: 20, display: "flex" }}>
                   <div style={{ width: "50%" }}>
@@ -423,18 +429,20 @@ class Detail extends React.Component {
                 {/*Head danh gia san pham*/}
                 <div style={{ width: "100%", backgroundColor: "#fafafa", height: 50, lineHeight: "50px" }}>
                   <div style={{ paddingLeft: 20, textAlign: "start", fontWeight: "bold" }}>
-                    Đánh giá sản phẩm: {name}
+                    Đánh giá sản phẩm: {product.TenSanPham}
                   </div>
                 </div>
                 {/*Rating cho san pham va thong ke */}
                 <div style={{ width: "100%", backgroundColor: "#fff", display: "flex", marginTop: 15, paddingBottom: 20 }}>
                   <div style={{ width: "30%" }}>
-                    <div style={{}}>
-                      <label style={{ fontSize: 36, fontWeight: "bold" }}>4</label>
-                      <label style={{ fontSize: 28 }}>/5</label>
+                    <div style={{ width: "100%", margin: "0 auto", textAlign: "center" }}>
+                      <div>
+                        <label style={{ fontSize: 36, fontWeight: "bold" }}>4</label>
+                        <label style={{ fontSize: 28 }}>/5</label>
+                      </div>
+                      <Rating value={4} readOnly size="large" />
+                      <div style={{ fontSize: 12 }}>28 đánh giá</div>
                     </div>
-                    <Rating value={4} readOnly size="large" />
-                    <div style={{ fontSize: 12 }}>28 đánh giá</div>
                   </div>
                   <div style={{ width: "70%" }}>
                     <div style={{ display: "flex" }}>
@@ -536,4 +544,18 @@ class Detail extends React.Component {
     );
   }
 }
-export default withStyles(useStyles)(Detail);
+const mapStateToProps = state => {
+  return {
+    listProduct: state.DetailReducer.listProduct,
+    product: state.DetailReducer.product,
+  };
+};
+
+export default
+  compose(
+    withStyles(useStyles),
+    connect(mapStateToProps, {
+      getListProduct,
+      getProductById,
+    })
+  )(Detail);

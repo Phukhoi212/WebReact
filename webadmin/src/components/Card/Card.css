@@ -1,3 +1,15 @@
 .MuiRating-root {
     font-size: 12px !important;
 }
+
+.text {
+    font-size: 13px;
+    font-weight: bold;
+    width: 90%;
+    height: 20px;
+    margin: 0 auto;
+}
+
+div.text :hover {
+    overflow: visible;
+}

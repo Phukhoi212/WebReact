@@ -4,12 +4,12 @@ import Search from "../Search";
 import logo from "../../images/logo.png";
 import IconButton from '@material-ui/core/IconButton';
 import AddShoppingCartOutlinedIcon from '@material-ui/icons/AddShoppingCartOutlined';
+import Badge from '@material-ui/core/Badge';
 import SimpleMenu from "../Menu";
 
 const useStyles = () => ({
   root: {
     width: "100%",
-    //backgroundColor: "orange",
     height: "8rem",
     alignItems: "center",
     paddingTop: "2rem",
@@ -24,7 +24,6 @@ const useStyles = () => ({
     justifyContent: "center",
   },
   addtoCart: {
-    borderRadius: 0,
     marginLeft: "1rem",
   },
   bar_container: {
@@ -39,6 +38,16 @@ const useStyles = () => ({
     display: "flex"
   }
 })
+
+const StyledBadge = withStyles((theme) => ({
+  badge: {
+    right: -3,
+    border: `1px solid ${theme.palette.background.paper}`,
+    padding: '0 4px',
+    backgroundColor: "red",
+    color: "#fff"
+  },
+}))(Badge);
 
 const List = ["tetetet", "zxzxzxzx", "adasdsads", "Aweqweqwe"];
 
@@ -55,10 +64,13 @@ class Header extends React.Component {
             src={logo}
             style={{ width: "7rem", height: "4rem" }}
           />
-          <Search />
+          <Search value={this.props.search} onChange={this.props.onChange} onClick={this.props.onClick} />
           <IconButton color="primary" size="medium" className={classes.addtoCart}>
-            <AddShoppingCartOutlinedIcon />
+            <StyledBadge badgeContent={4}>
+              <AddShoppingCartOutlinedIcon />
+            </StyledBadge>
           </IconButton>
+
         </div>
         <div className={classes.bar_container}>
           <div className={classes.bar}>

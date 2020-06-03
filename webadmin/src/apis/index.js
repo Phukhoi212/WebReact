@@ -1,6 +1,6 @@
 import axios from "axios";
-//import { removeLocalStorage, getLocalStorage, STORE_KEYS } from "./utils/tools";
-//import history from "../history";
+import { removeLocalStorage, STORE_KEYS } from "../utils/tool";
+import history from "../history";
 
 //const REACT_APP_URL = process.env.REACT_APP_URL;
 
@@ -8,16 +8,21 @@ const axiosInstance = axios.create({
   baseURL: "http://localhost:4000/",
 });
 
+const header = {
+  'Content-Type': 'application/json',
+  Accept: 'application/json'
+};
+
 const DEFAULT_RESULT = { code: 100, message: undefined };
 
 // check if access token is expired and
 // Force logout and redirect to login page when hit error code 401
-// const validateAccessToken = errorMessage => {
-//   if (errorMessage === "Request failed with status code 401") {
-//     removeLocalStorage(STORE_KEYS.ACCESS_TOKEN);
-//     history.push("/login");
-//   }
-// };
+const validateAccessToken = errorMessage => {
+  if (errorMessage === "Request failed with status code 401") {
+    removeLocalStorage(STORE_KEYS.ACCESS_TOKEN);
+    history.push("/manager/admins/login");
+  }
+};
 
 const post = async (URL, data) => {
   //const accessToken = getLocalStorage(STORE_KEYS.ACCESS_TOKEN, []);
@@ -25,11 +30,11 @@ const post = async (URL, data) => {
   let result = DEFAULT_RESULT;
   try {
     result = await axiosInstance.post(URL, data, {
-      // headers: { Authorization: `Bearer ${accessToken}` },
+      headers: header,
     });
   } catch (error) {
     console.log("post error:", error);
-    //validateAccessToken(error.message);
+    validateAccessToken(error.message);
   }
   return result;
 };

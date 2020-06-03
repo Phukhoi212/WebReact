@@ -2,7 +2,6 @@ import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import logo from "../../images/logo.png";
 import rau from "../../images/rau.jpg";
-import NavBar from "../../components/NavBar";
 import Input from "../../components/Input";
 import { Button } from "@material-ui/core";
 import Footer from "../../components/Footer";
@@ -47,11 +46,14 @@ const useStyles = () => ({
 
 
 class BuyProduct extends React.Component {
+  componentDidMount(){
+    window.scrollTo(0, 0)
+  }
+
   render() {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <NavBar />
         <div className={classes.logo}>
           <div style={{ width: "20%", textAlign: "end", height: "inherit" }}>
             <img style={{ height: 100, lineHeight: "100px" }} alt="" src={logo} />
@@ -82,10 +84,10 @@ class BuyProduct extends React.Component {
             <div style={{ width: "100%", textAlign: "start", marginTop: 20 }}>
               <div style={{ width: "100%", backgroundColor: "#fafafa", height: 50, lineHeight: "50px", display: "flex" }}>
                 <div style={{ width: "40%", textAlign: "start", paddingLeft: 20 }}>
-                  <label>Gói sản phẩm: 2g Hạt Giống Rau Tía Tô</label>
+                  <label style={{ fontWeight: "bold" }}>Gói sản phẩm: 2g Hạt Giống Rau Tía Tô</label>
                 </div>
                 <div style={{ width: "60%", textAlign: "end", paddingRight: 20 }}>
-                  <label>Được gửi bởi: Anh Dũng Shop </label>
+                  <label style={{ fontWeight: "bold" }}>Được gửi bởi: Anh Dũng Shop </label>
                 </div>
               </div>
 

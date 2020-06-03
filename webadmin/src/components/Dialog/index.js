@@ -42,14 +42,17 @@ class DialogComponent extends React.Component {
           <DialogContent>
             {this.props.content}
           </DialogContent>
-          <DialogActions>
-            <Button onClick={this.handleCancel} variant="contained" color="primary">
-              Cancel
+          {this.props.actions ? (
+            <DialogActions>
+              <Button onClick={this.handleCancel} variant="contained" color="primary">
+                Cancel
             </Button>
-            <Button onClick={this.onConfirmButton} variant="contained" color="secondary" autoFocus>
-              {this.props.type === "edit" ? "Lưu" : "Thêm"}
-            </Button>
-          </DialogActions>
+              <Button onClick={this.onConfirmButton} variant="contained" color="secondary" autoFocus>
+                {this.props.type === "edit" ? "Lưu" : "Thêm"}
+              </Button>
+            </DialogActions>
+          ) : ""}
+
         </Dialog>
       </div>
     );

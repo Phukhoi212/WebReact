@@ -32,9 +32,6 @@ class Notification extends React.Component {
             severity={this.props.severity}
             style={{ alignItems: "center" }}
           >
-            {/* {props.messages.map(msg => (
-                    <div>{msg}</div>
-                  ))} */}
             {this.props.message}
           </Alert>
         </Snackbar>

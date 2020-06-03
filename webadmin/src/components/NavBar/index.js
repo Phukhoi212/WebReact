@@ -2,34 +2,49 @@ import React from "react";
 import { withStyles } from '@material-ui/core/styles';
 import logo from "../../images/logo.png";
 import { Button } from "@material-ui/core";
-//import { IconButton, Menu, MenuItem } from '@material-ui/core';
-//import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import AppBar from '@material-ui/core/AppBar';
+//import Toolbar from '@material-ui/core/Toolbar';
+import UserLogin from "../../containers/UserLogin";
 
 
 const useStyles = () => ({
   root: {
+    flexGrow: 1,
+  },
+  app: {
     with: "100%",
-    height: "3rem",
+    height: "auto",
     backgroundColor: "green",
-    display: "flex",
+    display: "block",
+  },
+  logo: {
+    width: "10%",
   },
   user: {
     width: "90%",
     height: "auto",
+    display: "flex",
+  },
+  tab: {
+    width: "80%",
+    display: "flex",
+    textAlign: "center",
+    lineHeight: 2,
   },
   bt_group: {
-    float: "right",
-    width: "15%",
-    paddingTop: 7,
+    textAlign: "end",
+    width: "20%",
   },
   button: {
     color: "#fff",
+    fontSize: 12
   }
 });
 
 class NavBar extends React.Component {
   state = {
     anchorEl: null,
+    openLogin: false,
   }
 
   onClickUser = (event) => {
@@ -44,39 +59,49 @@ class NavBar extends React.Component {
     })
   };
 
+  onOpenLogin = () => {
+    this.setState({ openLogin: true })
+  }
+
   render() {
     const { classes } = this.props;
+    const { openLogin } = this.state;
     return (
       <div className={classes.root}>
-        <a href="/">
-          <img
-            alt="vhg"
-            src={logo}
-            style={{ height: '3.5rem', width: '5.3rem', float: "left", marginLeft: "2rem" }}
-          />
-        </a>
-        <div className={classes.user}>
-          {/* <IconButton onClick={this.onClickUser} style={{ backgroundColor: "#ffff", float: "right" }} size="medium" color="secondary">
-            <AccountCircleIcon />
-          </IconButton>
-          <Menu
-            id="simple-menu"
-            anchorEl={this.state.anchorEl}
-            keepMounted
-            open={Boolean(this.state.anchorEl)}
-            onClose={this.handleClose}
-          >
-            <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-            <MenuItem onClick={this.handleClose}>My account</MenuItem>
-            <MenuItem><a href="/login">Logout</a></MenuItem>
-          </Menu> */}
-          <div className={classes.bt_group}>
-            <Button variant="text" className={classes.button}>Đăng nhập</Button>|
-            <Button variant="text" className={classes.button}>Đăng ký</Button>
+        <UserLogin open={openLogin} onBackdropClick={() => this.setState({ openLogin: false })} />
+        <AppBar position="sticky" className={classes.app}>
+          <div className={classes.logo}>
+            <a href="/">
+              <img
+                alt="vhg"
+                src={logo}
+                style={{ height: 'auto', width: '40%', float: "left", marginLeft: "2rem" }}
+              />
+            </a>
           </div>
-        </div>
+          <div className={classes.user}>
+            <div className={classes.tab}>
+              <div style={{ width: "25%" }}>
+                Tiết kiệm hơn với App
+              </div>
+              <div style={{ width: "25%" }}>
+                Đăng ký bán hàng cùng Green MAll
+              </div>
+              <div style={{ width: "25%" }}>
+                Chăm sóc khách hàng
+              </div>
+              <div style={{ width: "25%" }}>
+                Kiểm tra đơn hàng
+              </div>
+
+            </div>
+            <div className={classes.bt_group}>
+              <Button variant="text" className={classes.button} onClick={this.onOpenLogin}>Đăng nhập</Button>
+            </div>
+          </div>
 
 
+        </AppBar>
       </div>
     );
   }

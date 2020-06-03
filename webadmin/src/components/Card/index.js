@@ -2,10 +2,8 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { Link as RouterLink } from 'react-router-dom'
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Rating from '@material-ui/lab/Rating';
-import rau from "../../images/rau.jpg";
 import "./Card.css";
 
 const useStyles = ({
@@ -20,6 +18,10 @@ const useStyles = ({
     borderRadius: 0,
     margin: 5,
   },
+  info: {
+    width: "100%",
+    height: 110,
+  }
 });
 
 class CardComponent extends React.Component {
@@ -30,20 +32,26 @@ class CardComponent extends React.Component {
         <CardContent style={{ padding: 0 }}>
           <RouterLink
             exact="true"
-            to={`/detail`}
+            to={`/detail/${this.props.id}`}
           >
             <img
               alt="vhg"
-              src={rau}
+              src={this.props.src}
               style={{ padding: 0.2, width: "14rem", height: '12rem' }}
             />
           </RouterLink>
         </CardContent>
-        <CardActions >
-          <div style={{height: 20}}>
-            <Rating style={{ height: "inherit"}} name="half-rating-read" value={3.5} precision={0.5} readOnly />
+        <div className={classes.info}>
+          <div style={{ width: "95%", height: 20, float: "right" }}>
+            <Rating style={{ height: "inherit" }} name="half-rating-read" value={3.5} precision={0.5} readOnly />
           </div>
-        </CardActions>
+          <div className="text">
+            {this.props.name}
+          </div>
+          <div style={{width: "95%", float: "right", fontSize: 18, color: "orange", marginTop: 40 }}>
+            {this.props.price}
+          </div>
+        </div>
       </Card>
     );
   }
