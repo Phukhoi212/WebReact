@@ -1,7 +1,7 @@
 import React from "react";
 import compose from "recompose/compose";
 import { connect } from "react-redux";
-import { getListProduct, getProductById } from "./actions";
+import { getListProduct, getProductById, getCommentOfProduct, getListCustormer } from "./actions";
 import { withStyles, IconButton, Button } from "@material-ui/core";
 import Rating from '@material-ui/lab/Rating';
 import Header from "../../components/Header";
@@ -19,6 +19,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import "./Detail.css";
+import { get } from "lodash";
 
 const useStyles = () => ({
   root: {
@@ -167,8 +168,8 @@ const useStyles = () => ({
 class Detail extends React.Component {
   state = {
     number: 1,
-    name: "2g Hạt Giống Rau Tía Tô (Perilla frutescens)",
     like: false,
+    listBuy: [],
   }
 
   componentDidMount() {
@@ -176,6 +177,8 @@ class Detail extends React.Component {
     this.props.getListProduct();
     const id = this.props.match.params.id;
     this.props.getProductById(id);
+    this.props.getCommentOfProduct(id);
+    this.props.getListCustormer();
   }
 
   onClickAddIcon = () => {
@@ -193,12 +196,16 @@ class Detail extends React.Component {
   }
 
   onClickMuaHang = () => {
-    this.props.history.push({ pathname: '/detail/buy' });
+    this.setState({
+      listBuy: [...this.state.listBuy, this.props.product]
+    }, () => this.props.history.push({ pathname: '/product/buy', state: [this.props.product, this.state.number] }))
   }
 
   render() {
-    const { classes, product } = this.props;
-    const { number, name, like } = this.state;
+    const { classes, product, comment, listCustomer } = this.props;
+    const getComment = listCustomer.find(i => i.Ma_KhachHang === comment.Ma_KhachHang);
+    console.log("====>comment", get(getComment, "TenKhachHang", ""))
+    const { number, like } = this.state;
     const alert = "Sản phẩm này là tài sản cá nhân được bán bởi Nhà Bán Hàng Cá Nhân và không thuộc đối tượng phải chịu thuế GTGT. Do đó hóa đơn VAT không được cấp trong trường hợp này."
     return (
       <div className={classes.root}>
@@ -382,7 +389,7 @@ class Detail extends React.Component {
               {/*Head mo ta*/}
               <div style={{ width: "100%", backgroundColor: "#fafafa", height: 50, lineHeight: "50px" }}>
                 <div style={{ paddingLeft: 20, textAlign: "start", fontWeight: "bold" }}>
-                  Mô tả sản phẩm: {name}
+                  Mô tả sản phẩm: {product.TenSanPham}
                 </div>
               </div>
               {/*Thong bao */}
@@ -492,7 +499,7 @@ class Detail extends React.Component {
                 {/*Filter comment*/}
                 <div style={{ width: "100%", backgroundColor: "#fafafa", height: 50, lineHeight: "50px" }}>
                   <div style={{ paddingLeft: 20, textAlign: "start", fontWeight: "bold" }}>
-                    Đánh giá sản phẩm: {name}
+                    Đánh giá sản phẩm: {product.TenSanPham}
                   </div>
                 </div>
 
@@ -502,16 +509,16 @@ class Detail extends React.Component {
                       <Rating value={4} readOnly size="small" />
                     </div>
                     <div>
-                      <label style={{ fontSize: 12, marginLeft: 5 }}>bởi: Khoa Trần</label>
+                      <label style={{ fontSize: 12, marginLeft: 5 }}>bởi: {get(getComment, "TenKhachHang", "")}</label>
                     </div>
                   </div>
                   <div style={{ width: "70%", textAlign: "end" }}>
-                    <label style={{ fontSize: 12, marginRight: 20 }}>06 thg 6 2020</label>
+                    <label style={{ fontSize: 12, marginRight: 20 }}>{comment.NgayBinhLuan}</label>
                   </div>
                 </div>
 
                 <div style={{ width: "100%", backgroundColor: "#fff", height: "auto", marginTop: 20, textAlign: "start" }}>
-                  <label style={{ paddingLeft: 22 }}>This is test comment for product</label>
+                  <label style={{ paddingLeft: 22 }}>{comment.NoiDung}</label>
                 </div>
 
                 <div style={{ width: "100%", backgroundColor: "#fff", marginTop: 20, display: "flex", paddingBottom: 20 }}>
@@ -548,6 +555,8 @@ const mapStateToProps = state => {
   return {
     listProduct: state.DetailReducer.listProduct,
     product: state.DetailReducer.product,
+    comment: state.DetailReducer.comment,
+    listCustomer: state.DetailReducer.listCustomer,
   };
 };
 
@@ -557,5 +566,7 @@ export default
     connect(mapStateToProps, {
       getListProduct,
       getProductById,
+      getCommentOfProduct,
+      getListCustormer,
     })
   )(Detail);

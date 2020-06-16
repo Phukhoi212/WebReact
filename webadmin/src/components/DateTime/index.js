@@ -10,7 +10,6 @@ class DateTime extends Component {
   onChange = startDate => this.setState({ startDate })
 
   render() {
-    console.log("===>date", this.state.startDate);
     return (
       <div>
         <DatePicker selected={this.state.startDate} onChange={this.onChange} dateFormat="dd/MM/yyyy"/>

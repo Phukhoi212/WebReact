@@ -8,7 +8,7 @@ class Input extends React.Component {
         <TextField
           id="outlined-dense"
           label={this.props.label}
-          type="text"
+          type={this.props.type}
           name={this.props.name}
           margin="dense"
           variant="outlined"

@@ -1,11 +1,11 @@
 import axios from "axios";
-import { removeLocalStorage, STORE_KEYS } from "../utils/tool";
+import { removeLocalStorage, STORE_KEYS, getLocalStorage } from "../utils/tool";
 import history from "../history";
 
 //const REACT_APP_URL = process.env.REACT_APP_URL;
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:4000/",
+  baseURL: "http://localhost:4000",
 });
 
 const header = {
@@ -25,12 +25,12 @@ const validateAccessToken = errorMessage => {
 };
 
 const post = async (URL, data) => {
-  //const accessToken = getLocalStorage(STORE_KEYS.ACCESS_TOKEN, []);
+  const accessToken = getLocalStorage(STORE_KEYS.ACCESS_TOKEN, []);
 
   let result = DEFAULT_RESULT;
   try {
     result = await axiosInstance.post(URL, data, {
-      headers: header,
+      headers: { Authorization: `Bearer ${accessToken}` },
     });
   } catch (error) {
     console.log("post error:", error);
@@ -40,16 +40,16 @@ const post = async (URL, data) => {
 };
 
 const put = async (URL, data) => {
-  //const accessToken = getLocalStorage(STORE_KEYS.ACCESS_TOKEN, []);
+  const accessToken = getLocalStorage(STORE_KEYS.ACCESS_TOKEN, []);
 
   let result = DEFAULT_RESULT;
   try {
     result = await axiosInstance.put(URL, data, {
-      //headers: { Authorization: `Bearer ${accessToken}` },
+      headers: { Authorization: `Bearer ${accessToken}` },
     });
   } catch (error) {
     console.log("post error:", error);
-    //validateAccessToken(error.message);
+    validateAccessToken(error.message);
   }
   return result;
 };
@@ -68,16 +68,16 @@ const get = async (URL, params = {}) => {
 };
 
 const axiosDelete = async (URL, data = []) => {
-  //const accessToken = getLocalStorage(STORE_KEYS.ACCESS_TOKEN, []);
+  const accessToken = getLocalStorage(STORE_KEYS.ACCESS_TOKEN, []);
   let result = DEFAULT_RESULT;
   try {
     result = await axiosInstance.delete(URL, {
       data,
-      //headers: { Authorization: `Bearer ${accessToken}` },
+      headers: { Authorization: `Bearer ${accessToken}` },
     });
   } catch (error) {
     console.log("delete error:", error.message);
-    //validateAccessToken(error.message);
+    validateAccessToken(error.message);
   }
 
   return result;

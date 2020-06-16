@@ -27,21 +27,23 @@ const useStyles = () => ({
   },
   card_content: {
     display: "flex",
-    height: 300,
+    height: "auto",
     padding: 0,
     overflow: "auto",
   },
   card: {
     listStyle: "none",
     height: 275,
-    width: "16.5%",
+    width: "19.5%",
     display: "contents",
   }
 })
 
 class Sales extends React.Component {
   render() {
-    const { classes } = this.props;
+    const { classes, list } = this.props;
+    console.log("sale", list)
+
     return (
       <div className={classes.root}>
         <div className={classes.head_sale}>
@@ -53,33 +55,27 @@ class Sales extends React.Component {
               Kết thúc trong:
             </div>
             <div style={{ width: "30%", fontWeight: "bold" }}>
-              <CoutDownComponent timer={10000} />
+              <CoutDownComponent timer={180000000} />
             </div>
           </div>
           <div style={{ width: "50%", textAlign: "end", lineHeight: 3 }}>
-            <a style={{  marginTop: 10 }} href="/">Xem tất cả ></a>
+            <a style={{ marginTop: 10 }} href="/">Xem tất cả ></a>
           </div>
         </div>
+
         <ul className={classes.card_content}>
-          <li className={classes.card}>
-            <Card />
-          </li>
-          <li className={classes.card}>
-            <Card />
-          </li>
-          <li className={classes.card}>
-            <Card />
-          </li>
-          <li className={classes.card}>
-            <Card />
-          </li>
-          <li className={classes.card}>
-            <Card />
-          </li>
-          <li className={classes.card}>
-            <Card />
-          </li>
-        </ul>
+          {list.map(sale => (
+            <li key={sale.Ma_SanPham} className={classes.card}>
+              <Card
+                src={sale.Image_Url}
+                price={(sale.GiaSanPham * sale.PhanTramKM)/100}
+                name={sale.TenSanPham}
+                km={sale.PhanTramKM + '%'}
+              />
+            </li>
+          ))}
+          </ul>
+
       </div>
     );
   }

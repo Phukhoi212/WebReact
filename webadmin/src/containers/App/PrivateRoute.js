@@ -18,7 +18,6 @@ class PrivateRoute extends React.Component {
   render() {
     const isLogged = getLocalStorage(STORE_KEYS.ACCESS_TOKEN);
     const Component = this.props.component;
-
     return (
       <Route
         {...this.props.props}

@@ -2,9 +2,11 @@ import React from "react";
 import { withStyles } from "@material-ui/core";
 import compose from "recompose/compose";
 import { connect } from "react-redux";
-import { getListProduct, getListProductBySearch, updateActiePage } from "./actions";
+import { getListProduct, getListProductBySearch, updateActiePage, getListProductSale } from "./actions";
+import { getListCategory } from "../../containers/Manager/Category/actions";
 import Sales from "../Sales";
 import CardComponent from "../../components/Card";
+import CategoryCard from "../../components/CategoryCard";
 import SlideShow from "../../components/Slide";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
@@ -39,7 +41,7 @@ const useStyles = () => ({
   },
   sales: {
     width: "100%",
-    height: 350,
+    height: 370,
     marginBottom: "1rem"
   },
   footer: {
@@ -48,6 +50,7 @@ const useStyles = () => ({
     display: "flex",
     flexWrap: "wrap",
     paddingLeft: 2,
+    height: "auto"
   },
   result: {
     width: "97%",
@@ -55,6 +58,13 @@ const useStyles = () => ({
     margin: "0 auto",
     paddingTop: 15,
     paddingBottom: 15
+  },
+  category: {
+    width: "80%",
+    height: 200,
+    marginBottom: "1rem",
+    backgroundColor: "#fff",
+    margin: "0 auto",
   }
 })
 
@@ -67,6 +77,8 @@ class Home extends React.Component {
   componentDidMount() {
     window.scrollTo(0, 0);
     this.props.getListProduct();
+    this.props.getListCategory();
+    this.props.getListProductSale();
   }
 
   onChangeKeywordSearch = (event) => {
@@ -84,21 +96,40 @@ class Home extends React.Component {
   };
 
   render() {
-    const { classes, listProduct, searchResult, activePage } = this.props;
-    const begin = (activePage - 1) * 15,
-      end = begin + 15;
+    const { classes, listProduct, searchResult, activePage, listCategory, listSales } = this.props;
+    const begin = (activePage - 1) * 10,
+      end = begin + 10;
     const productInPage = listProduct.slice(begin, end);
-    console.log("---->", listProduct.length)
     return (
       <div className={classes.root}>
         <div className={classes.header}>
-          <Header search={this.state.keywordSearch} onChange={this.onChangeKeywordSearch} onClick={this.onClickSearchIcon} />
+          <Header
+            search={this.state.keywordSearch}
+            onChange={this.onChangeKeywordSearch}
+            onClick={this.onClickSearchIcon}
+          />
         </div>
         <div className={classes.slide}>
           <SlideShow />
         </div>
         <div className={classes.sales}>
-          <Sales />
+          <Sales list={listSales} />
+        </div>
+
+        <div className={classes.category}>
+          <div style={{ width: "100%", height: 40 }}>
+            DANH MỤC
+          </div>
+          <div style={{ width: "100%", display: "flex" }}>
+            {listCategory.map(cate => (
+              <CategoryCard
+                key={cate.id}
+                name={cate.TenLoaiHang}
+                id={cate.id}
+              />
+            ))}
+          </div>
+
         </div>
         <div className={classes.container}>
           {/* <div className={classes.left}>
@@ -108,39 +139,49 @@ class Home extends React.Component {
             <RightPanel />
           </div> */}
           <div className={classes.result}>
-            <div className={classes.list}>
-              {searchResult.length === 0 ? productInPage.map(product => (
-                <CardComponent
-                  key={product.Ma_SanPham}
-                  src={product.Image_Url}
-                  name={product.TenSanPham}
-                  price={product.GiaSanPham}
-                  id={product.Ma_SanPham}
-                />
-              )) :
-                searchResult.map(product => (
+            <div>
+              <label style={{ fontWeight: "bold" }}>SẢN PHẨM NỔI BẬT</label>
+            </div>
+            <div style={{ width: "100%" }}>
+              <div className={classes.list}>
+                {searchResult.length === 0 ? productInPage.map(product => (
                   <CardComponent
                     key={product.Ma_SanPham}
                     src={product.Image_Url}
                     name={product.TenSanPham}
                     price={product.GiaSanPham}
                     id={product.Ma_SanPham}
+                    style={{ width: "14rem !important" }}
                   />
-                ))}
+                )) :
+                  searchResult.map(product => (
+                    <CardComponent
+                      key={product.Ma_SanPham}
+                      src={product.Image_Url}
+                      name={product.TenSanPham}
+                      price={product.GiaSanPham}
+                      id={product.Ma_SanPham}
+                    />
+                  ))}
+
+              </div>
+
             </div>
-            <Pagination
-              hideNavigation
-              hideDisabled
-              itemClass="page-item"
-              linkClass="page-link"
-              firstPageText="⟨⟨"
-              lastPageText="⟩⟩"
-              activePage={this.props.activePage}
-              itemsCountPerPage={15}
-              totalItemsCount={listProduct.length}
-              pageRangeDisplayed={5}
-              onChange={this.handlePageChange}
-            />
+            <div style={{ width: "100%", marginTop: 15 }}>
+              <Pagination
+                hideNavigation
+                hideDisabled
+                itemClass="page-item"
+                linkClass="page-link"
+                firstPageText="⟨⟨"
+                lastPageText="⟩⟩"
+                activePage={this.props.activePage}
+                itemsCountPerPage={10}
+                totalItemsCount={listProduct.length}
+                pageRangeDisplayed={5}
+                onChange={this.handlePageChange}
+              />
+            </div>
           </div>
         </div>
         <div className={classes.footer}>
@@ -156,6 +197,8 @@ const mapStateToProps = state => {
     listProduct: state.HomeReducer.listProduct,
     searchResult: state.HomeReducer.searchResult,
     activePage: state.HomeReducer.activePage,
+    listCategory: state.Admin_CategoryReducer.listCategory,
+    listSales: state.HomeReducer.listSales,
   };
 };
 
@@ -165,6 +208,8 @@ export default
     connect(mapStateToProps, {
       getListProduct,
       getListProductBySearch,
-      updateActiePage
+      updateActiePage,
+      getListCategory,
+      getListProductSale,
     })
   )(Home);

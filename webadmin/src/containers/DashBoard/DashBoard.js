@@ -124,6 +124,7 @@ class Dashboard extends React.Component {
   componentDidMount() {
     this.props.getListEmployees();
   }
+  
   componentWillReceiveProps(nextProps) {
     this.setState({ data: nextProps.employeeList })
   }
@@ -133,27 +134,12 @@ class Dashboard extends React.Component {
       open: true
     })
   };
+
   handleDrawerClose = () => {
     this.setState({
       open: false
     })
   };
-
-  // onRowUpdate = (newData, oldData) =>
-  //   new Promise(resolve => {
-  //     let copyArray = this.props.employeeList.slice();
-  //     setTimeout(() => {
-  //       resolve();
-  //       if (oldData) {
-  //         this.setState((prevState) => {
-  //           const data = [...prevState.data];
-  //           data[data.indexOf(oldData)] = newData;
-  //           return { ...prevState, data };
-  //         });
-  //       }
-  //     }, 600);
-  //   });
-
 
   render() {
     const { classes } = this.props;

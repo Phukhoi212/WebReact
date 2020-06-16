@@ -49,13 +49,13 @@ const StyledBadge = withStyles((theme) => ({
   },
 }))(Badge);
 
-const List = ["tetetet", "zxzxzxzx", "adasdsads", "Aweqweqwe"];
 
 
 
 class Header extends React.Component {
   render() {
     const { classes } = this.props;
+
     return (
       <div className={classes.root}>
         <div className={classes.search}>
@@ -74,7 +74,6 @@ class Header extends React.Component {
         </div>
         <div className={classes.bar_container}>
           <div className={classes.bar}>
-            <SimpleMenu menuList={List} />
           </div>
         </div>
       </div>

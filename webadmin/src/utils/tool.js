@@ -1,3 +1,12 @@
+// import { compile } from 'path-to-regexp';
+
+// export const toPath = (pattern, data) => compile(pattern, { encode: encodeURIComponent })(data);
+/**
+ * return an object value by specific key or default value
+ * @param {string} key local storage key will be set
+ * @param {object} defaultValue will be used when failed
+ */
+
 export const STORE_KEYS = {
     ACCESS_TOKEN: "ACCESS_TOKEN",
 };

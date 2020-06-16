@@ -1,10 +1,14 @@
 import React from "react";
+import compose from "recompose/compose";
+import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import logo from "../../images/logo.png";
 import rau from "../../images/rau.jpg";
 import Input from "../../components/Input";
 import { Button } from "@material-ui/core";
 import Footer from "../../components/Footer";
+import { getListFarm } from "./actions";
+import { get } from "lodash";
 import "./Buy.css";
 
 const useStyles = () => ({
@@ -46,12 +50,17 @@ const useStyles = () => ({
 
 
 class BuyProduct extends React.Component {
-  componentDidMount(){
-    window.scrollTo(0, 0)
+  componentDidMount() {
+    window.scrollTo(0, 0);
+    this.props.getListFarm();
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, farmList } = this.props;
+    const productSelected = this.props.history.location.state[0];
+    const numberProduct = this.props.history.location.state[1];
+    const shopName = farmList.find(i => i.Ma_NongTrai === productSelected.Ma_NongTrai);
+
     return (
       <div className={classes.root}>
         <div className={classes.logo}>
@@ -81,13 +90,14 @@ class BuyProduct extends React.Component {
               <Button style={{ marginRight: 20 }} variant="contained" color="primary">Lưu</Button>
             </div>
             {/**Thong tin goi hang */}
-            <div style={{ width: "100%", textAlign: "start", marginTop: 20 }}>
+            <div style={{ width: "100%", textAlign: "start", marginTop: 20, paddingBottom: 20 }}>
               <div style={{ width: "100%", backgroundColor: "#fafafa", height: 50, lineHeight: "50px", display: "flex" }}>
                 <div style={{ width: "40%", textAlign: "start", paddingLeft: 20 }}>
-                  <label style={{ fontWeight: "bold" }}>Gói sản phẩm: 2g Hạt Giống Rau Tía Tô</label>
+                  {/*Ten San Pham */}
+                  <label style={{ fontWeight: "bold" }}>Tên Sản Phẩm: {productSelected.TenSanPham}</label>
                 </div>
                 <div style={{ width: "60%", textAlign: "end", paddingRight: 20 }}>
-                  <label style={{ fontWeight: "bold" }}>Được gửi bởi: Anh Dũng Shop </label>
+                  <label style={{ fontWeight: "bold" }}>Được gửi bởi: {get(shopName, "TenNongTrai", "")} </label>
                 </div>
               </div>
 
@@ -98,16 +108,15 @@ class BuyProduct extends React.Component {
                       <img style={{ width: "85%" }} alt="" src={rau} />
                     </div>
                   </div>
-                  <div style={{ width: "70%" }}>
-                    2g Hạt Giống Rau Tía Tô (Perilla frutescens)sinh trưởng khỏe độ đồng đều cao trồng được quanh
-                    năm tỷ lệ nảy mầm cao kháng bệnh tốt
+                  <div style={{ width: "70%", textAlign: "justify" }}>
+                    {productSelected.Mota}
                   </div>
                 </div>
                 <div style={{ width: "20%", textAlign: "center" }}>
-                  <label style={{ fontSize: 20, color: "orange" }}>7.000</label>
+                  <label style={{ fontSize: 20, color: "orange" }}>{productSelected.GiaSanPham}</label>
                 </div>
                 <div style={{ width: "20%", textAlign: "center" }}>
-                  Số lượng: 1
+                  Số lượng: {numberProduct}
                 </div>
               </div>
 
@@ -122,10 +131,10 @@ class BuyProduct extends React.Component {
             <div style={{ width: "100%", marginTop: 20 }}>
               <div style={{ width: "100%", display: "flex", marginBottom: 15 }}>
                 <div style={{ width: "50%", textAlign: "start", paddingLeft: 20, color: "#757575" }}>
-                  Tạm tính 1 sản phẩm:
+                  Tạm tính {numberProduct} sản phẩm:
                 </div>
                 <div style={{ width: "50%", textAlign: "end", paddingRight: 15, fontWeight: "bold" }}>
-                  7.000 vnđ
+                  {productSelected.GiaSanPham * numberProduct} vnđ
                 </div>
               </div>
 
@@ -143,7 +152,7 @@ class BuyProduct extends React.Component {
                   <Input placeholder={"Nhập mã giảm giá"} />
                 </div>
 
-                <div style={{ width: "25%", textAlign: "end", paddingRight: 15, paddingTop: 9 }}>
+                <div style={{ width: "25%", textAlign: "end", paddingTop: 9 }}>
                   <Button variant="contained" style={{ backgroundColor: "#1a9cb7", color: "#fff" }}>
                     Áp dụng
                   </Button>
@@ -156,7 +165,7 @@ class BuyProduct extends React.Component {
                 </div>
                 <div style={{ width: "50%", textAlign: "end", paddingRight: 15 }}>
                   <div style={{ fontWeight: "bold", color: "orange" }}>
-                    16.900 vnđ
+                    {numberProduct * productSelected.GiaSanPham + 9900} vnđ
                   </div>
                   <div>
                     <label style={{ fontSize: 12 }}>Đã bao gồm VAT (nếu có)</label>
@@ -187,4 +196,16 @@ class BuyProduct extends React.Component {
     );
   }
 }
-export default withStyles(useStyles)(BuyProduct);
+const mapStateToProps = state => {
+  return {
+    farmList: state.BuyProductReducer.farmList,
+  };
+};
+
+export default
+  compose(
+    withStyles(useStyles),
+    connect(mapStateToProps, {
+      getListFarm,
+    })
+  )(BuyProduct);

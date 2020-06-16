@@ -5,6 +5,17 @@ import { Button } from "@material-ui/core";
 import AppBar from '@material-ui/core/AppBar';
 //import Toolbar from '@material-ui/core/Toolbar';
 import UserLogin from "../../containers/UserLogin";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+
+// Components
+import { NavLink, withRouter } from "react-router-dom";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+
+// Actions
+import { deleteSession } from "../../actions/SessionActions";
+
 
 
 const useStyles = () => ({
@@ -47,6 +58,17 @@ class NavBar extends React.Component {
     openLogin: false,
   }
 
+  static propTypes = {
+    history: PropTypes.object.isRequired,
+    deleteSession: PropTypes.func.isRequired,
+    isLogged: PropTypes.bool.isRequired,
+    user: PropTypes.object,
+  };
+
+  static defaultProps = {
+    user: {},
+  };
+/////////////
   onClickUser = (event) => {
     this.setState({
       anchorEl: event.currentTarget,

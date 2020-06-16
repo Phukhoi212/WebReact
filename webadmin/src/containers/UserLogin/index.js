@@ -6,6 +6,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Input from "../../components/Input";
 import { Button } from "@material-ui/core";
 import FacebookIcon from '@material-ui/icons/Facebook';
+import "./login.css";
 
 const useStyles = () => ({
   root: {
@@ -21,7 +22,8 @@ const useStyles = () => ({
     width: "50%",
     height: 200,
     paddingLeft: 10,
-    paddingRight: 10
+    paddingRight: 10,
+    paddingTop: 20
   },
   text: {
     fontSize: 12
@@ -41,7 +43,7 @@ class UserLogin extends React.Component {
                 <label className={classes.text}>Tên đăng nhập</label>
                 <Input />
                 <label className={classes.text}>Mật khẩu</label>
-                <Input />
+                <Input type="password" />
 
               </div>
               <div className={classes.right}>
@@ -49,10 +51,10 @@ class UserLogin extends React.Component {
                 <label style={{ fontSize: 12 }}>Hoặc đăng nhập bằng</label>
                 <Button fullWidth style={{ backgroundColor: "#3d6ad6", marginTop: 10 }}>
                   <FacebookIcon style={{ color: "#fff" }} />
-                  <label style={{ color: "#fff", marginLeft: 5 }}>FACEBOOK</label>
+                  <div style={{ color: "#fff", marginLeft: 5 }}>FACEBOOK</div>
                 </Button>
                 <Button fullWidth style={{ backgroundColor: "#d34836", marginTop: 10 }}>
-                  <label style={{ color: "#fff", marginLeft: 5 }}>GOOGLE</label>
+                  <div style={{ color: "#fff", marginLeft: 5 }}>GOOGLE</div>
                 </Button>
               </div>
 
