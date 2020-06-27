@@ -59,7 +59,7 @@ class Sales extends React.Component {
             </div>
           </div>
           <div style={{ width: "50%", textAlign: "end", lineHeight: 3 }}>
-            <a style={{ marginTop: 10 }} href="/">Xem tất cả ></a>
+            <a style={{ marginTop: 10 }} href="/sale/detail">{`Xem tất cả >`}</a>
           </div>
         </div>
 
@@ -67,14 +67,15 @@ class Sales extends React.Component {
           {list.map(sale => (
             <li key={sale.Ma_SanPham} className={classes.card}>
               <Card
+                id={sale.Ma_SanPham}
                 src={sale.Image_Url}
-                price={(sale.GiaSanPham * sale.PhanTramKM)/100}
+                price={sale.GiaSanPham - ((sale.GiaSanPham * sale.PhanTramKM) / 100)}
                 name={sale.TenSanPham}
                 km={sale.PhanTramKM + '%'}
               />
             </li>
           ))}
-          </ul>
+        </ul>
 
       </div>
     );

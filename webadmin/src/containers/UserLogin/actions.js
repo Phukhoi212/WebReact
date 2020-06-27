@@ -1,7 +1,7 @@
 import { actions } from "./enums";
 import * as apis from "../../apis";
-import { setLocalStorage, STORE_KEYS } from "../../../utils/tool";
-import history from "../../../history";
+import { setLocalStorage, STORE_KEYS } from "../../utils/tool";
+//import history from "../../history";
 
 const USER_LOGIN_URL = "/customers/login";
 
@@ -16,13 +16,14 @@ export const userLogin = (userName, password) => async dispatch => {
   if (status === 200) {
     setLocalStorage(STORE_KEYS.ACCESS_TOKEN, token);
     dispatch({
-      type: actions.RESET_STATE,
+      type: actions.USER_LOGIN_SUCCESS,
+      payload: response.data,
     });
     dispatch({
       type: actions.USER_LOGIN_SUBMITTING
     })
-    history.push("/");
+    //history.push("/");
   } else {
-    dispatch({ type: actions.LOGIN_FAILURE, data: { err: true, status: "" } });
+    dispatch({ type: actions.USER_LOGIN_FAILURE, data: { err: true, status: "" } });
   }
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles } from "@material-ui/core";
+import { withStyles, Button } from "@material-ui/core";
 import compose from "recompose/compose";
 import { connect } from "react-redux";
 import { getListProduct, getListProductBySearch, updateActiePage, getListProductSale } from "./actions";
@@ -99,7 +99,7 @@ class Home extends React.Component {
     const { classes, listProduct, searchResult, activePage, listCategory, listSales } = this.props;
     const begin = (activePage - 1) * 10,
       end = begin + 10;
-    const productInPage = listProduct.slice(begin, end);
+    const productInPage = searchResult.length !== 0 ? searchResult.slice(begin, end) : listProduct.slice(begin, end);
     return (
       <div className={classes.root}>
         <div className={classes.header}>
@@ -109,38 +109,42 @@ class Home extends React.Component {
             onClick={this.onClickSearchIcon}
           />
         </div>
-        <div className={classes.slide}>
-          <SlideShow />
-        </div>
-        <div className={classes.sales}>
-          <Sales list={listSales} />
-        </div>
-
-        <div className={classes.category}>
-          <div style={{ width: "100%", height: 40 }}>
-            DANH MỤC
+        {searchResult.length !== 0 ? "" :
+          <div className={classes.slide}>
+            <SlideShow />
           </div>
-          <div style={{ width: "100%", display: "flex" }}>
-            {listCategory.map(cate => (
-              <CategoryCard
-                key={cate.id}
-                name={cate.TenLoaiHang}
-                id={cate.id}
-              />
-            ))}
-          </div>
+        }
 
-        </div>
+        {searchResult.length !== 0 ? "" :
+          <div className={classes.sales}>
+            <Sales list={listSales} />
+          </div>
+        }
+
+        {searchResult.length !== 0 ? "" :
+          <div className={classes.category}>
+            <div style={{ width: "100%", height: 40 }}>
+              <label style={{ fontWeight: "bold", padding: 15 }}>DANH MỤC</label>
+            </div>
+            <div style={{ width: "100%", display: "flex" }}>
+              {listCategory.map(cate => (
+                <CategoryCard
+                  key={cate.id}
+                  name={cate.TenLoaiHang}
+                  id={cate.id}
+                />
+              ))}
+            </div>
+          </div>
+        }
+
         <div className={classes.container}>
-          {/* <div className={classes.left}>
-            <LeftPanel />
-          </div> */}
-          {/* <div className={classes.right}>
-            <RightPanel />
-          </div> */}
           <div className={classes.result}>
             <div>
-              <label style={{ fontWeight: "bold" }}>SẢN PHẨM NỔI BẬT</label>
+              <label style={{ fontWeight: "bold" }}>
+                {searchResult.length === 0 ? "SẢN PHẨM NỔI BẬT" : `KẾT QUẢ TÌM KIẾM: ${searchResult.length} Sản phẩm`}
+                {searchResult.length !== 0 ? <a style={{ paddingLeft: 20 }} href='/home'>{`<<  Trang Chủ`}</a> : ""}
+              </label>
             </div>
             <div style={{ width: "100%" }}>
               <div className={classes.list}>
@@ -154,7 +158,7 @@ class Home extends React.Component {
                     style={{ width: "14rem !important" }}
                   />
                 )) :
-                  searchResult.map(product => (
+                  productInPage.map(product => (
                     <CardComponent
                       key={product.Ma_SanPham}
                       src={product.Image_Url}
@@ -175,9 +179,9 @@ class Home extends React.Component {
                 linkClass="page-link"
                 firstPageText="⟨⟨"
                 lastPageText="⟩⟩"
-                activePage={this.props.activePage}
+                activePage={activePage}
                 itemsCountPerPage={10}
-                totalItemsCount={listProduct.length}
+                totalItemsCount={searchResult.length !== 0 ? searchResult.length : listProduct.length}
                 pageRangeDisplayed={5}
                 onChange={this.handlePageChange}
               />

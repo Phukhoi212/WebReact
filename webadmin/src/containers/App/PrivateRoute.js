@@ -17,16 +17,17 @@ class PrivateRoute extends React.Component {
 
   render() {
     const isLogged = getLocalStorage(STORE_KEYS.ACCESS_TOKEN);
+    console.log("islogied", isLogged)
     const Component = this.props.component;
     return (
       <Route
         {...this.props.props}
         render={props => {
-          if (props.location.pathname !== "/login") {
+          if (props.location.pathname !== "/manager/admins/login") {
             return isLogged ? (
               <Component {...props} match={this.props.computedMatch} />
             ) : (
-              <Redirect to={{ pathname: "/login", state: { from: props.location } }} />
+              <Redirect to={{ pathname: "/manager/admins/login", state: { from: props.location } }} />
             );
           }
           return "";

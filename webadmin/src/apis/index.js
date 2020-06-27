@@ -8,10 +8,6 @@ const axiosInstance = axios.create({
   baseURL: "http://localhost:4000",
 });
 
-const header = {
-  'Content-Type': 'application/json',
-  Accept: 'application/json'
-};
 
 const DEFAULT_RESULT = { code: 100, message: undefined };
 

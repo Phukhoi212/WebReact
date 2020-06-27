@@ -7,7 +7,7 @@ const LoadingIndicator = () => {
   return (
     <div className="mask-spiner">
       <div className="spin-content">
-        <CircularProgress color="secondary" />
+        <CircularProgress value={300000} color="secondary" />
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { Link as RouterLink } from 'react-router-dom'
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Rating from '@material-ui/lab/Rating';
+import { format_curency } from "../../utils/tool";
 import "./Card.css";
 
 const useStyles = ({
@@ -25,6 +26,10 @@ const useStyles = ({
 });
 
 class CardComponent extends React.Component {
+  format_curency = ((money) => {
+    money = money.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+    return money;
+  });
   render() {
     const { classes } = this.props;
     return (
@@ -55,7 +60,7 @@ class CardComponent extends React.Component {
               <label style={{ color: "red", fontWeight: "bold", fontSize: 12, width: "100%" }}>Sale: {this.props.km}</label>
               : ""}
 
-            <label style={{ fontSize: 18, color: "orange" }}>{this.props.price}</label>
+            <label style={{ fontSize: 18, color: "orange" }}>{format_curency(this.props.price)}</label>
           </div>
         </div>
       </Card>

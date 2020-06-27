@@ -25,7 +25,6 @@ const useStyles = () => ({
 class Search extends React.Component {
   render() {
     const { classes } = this.props;
-    console.log("=>", this.props.value)
     return (
       <Paper className={classes.root}>
         <InputBase
@@ -34,7 +33,12 @@ class Search extends React.Component {
           value={this.props.value}
           onChange={this.props.onChange}
         />
-        <IconButton onClick={this.props.onClick} className={classes.search_icon} aria-label="search">
+        <IconButton
+          disabled={this.props.value.trim() !== "" ? false : true}
+          onClick={this.props.onClick}
+          className={classes.search_icon}
+          aria-label="search"
+        >
           <SearchIcon />
         </IconButton>
       </Paper>

@@ -23,9 +23,10 @@ export const submitLogin = (username, password) => async dispatch => {
   if (status === 200) {
     setLocalStorage(STORE_KEYS.ACCESS_TOKEN, token);
     dispatch({
-      type: actions.RESET_STATE,
+      type: actions.LOGIN_SUCCESS,
+      payload: response.data,
     });
-    history.push("/manager/admins");
+    history.push("/manager/dashboard");
   } else {
     dispatch({ type: actions.LOGIN_FAILURE, data: { err: true, status: "" } });
   }

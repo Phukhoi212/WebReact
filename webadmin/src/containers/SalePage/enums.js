@@ -1,0 +1,7 @@
+const actions = {
+  GET_LIST_PRODUCT_SALE: "GET_LIST_PRODUCT_SALE",
+  UPDATE_ACTIVE_PAGE: "UPDATE_ACTIVE_PAGE",
+  GET_FARM_INFO: "GET_FARM_INFO",
+};
+
+export { actions };

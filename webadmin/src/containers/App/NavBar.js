@@ -1,20 +1,16 @@
 import React from "react";
+import compose from "recompose/compose";
 import { withStyles } from '@material-ui/core/styles';
 import logo from "../../images/logo.png";
 import { Button } from "@material-ui/core";
 import AppBar from '@material-ui/core/AppBar';
-//import Toolbar from '@material-ui/core/Toolbar';
-import UserLogin from "../../containers/UserLogin";
+import UserLogin from "../UserLogin";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import { withRouter } from "react-router-dom";
+import { Menu, MenuItem } from '@material-ui/core'
 
-// Components
-import { NavLink, withRouter } from "react-router-dom";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-
-// Actions
-import { deleteSession } from "../../actions/SessionActions";
+// // Actions
+import { deleteSessionUser } from "../../actions/SessionActions";
 
 
 
@@ -53,27 +49,33 @@ const useStyles = () => ({
 });
 
 class NavBar extends React.Component {
-  state = {
-    anchorEl: null,
-    openLogin: false,
+  constructor(props) {
+    super(props);
+    this.state = {
+      anchorEl: null,
+      openLogin: false,
+    }
   }
 
-  static propTypes = {
-    history: PropTypes.object.isRequired,
-    deleteSession: PropTypes.func.isRequired,
-    isLogged: PropTypes.bool.isRequired,
-    user: PropTypes.object,
-  };
-
-  static defaultProps = {
-    user: {},
-  };
-/////////////
   onClickUser = (event) => {
     this.setState({
       anchorEl: event.currentTarget,
     })
   }
+
+
+  onOpenLogin = () => {
+    this.setState({
+      openLogin: true,
+    })
+  }
+
+  handleCloseLogin = () => {
+    this.setState({
+      openLogin: false,
+    })
+  }
+
 
   handleClose = () => {
     this.setState({
@@ -81,19 +83,25 @@ class NavBar extends React.Component {
     })
   };
 
-  onOpenLogin = () => {
-    this.setState({ openLogin: true })
-  }
+  handleLogout = () => {
+    this.props.deleteSessionUser();
+    this.props.history.push("/home");
+  };
 
   render() {
     const { classes } = this.props;
-    const { openLogin } = this.state;
+    const { anchorEl, openLogin } = this.state;
+    const userAcept = localStorage.getItem("user")
     return (
       <div className={classes.root}>
-        <UserLogin open={openLogin} onBackdropClick={() => this.setState({ openLogin: false })} />
+        <UserLogin
+          open={openLogin}
+          onBackdropClick={() => this.setState({ openLogin: false })}
+          handleCloseLogin={this.handleCloseLogin}
+        />
         <AppBar position="sticky" className={classes.app}>
           <div className={classes.logo}>
-            <a href="/">
+            <a href="/home">
               <img
                 alt="vhg"
                 src={logo}
@@ -118,14 +126,43 @@ class NavBar extends React.Component {
 
             </div>
             <div className={classes.bt_group}>
-              <Button variant="text" className={classes.button} onClick={this.onOpenLogin}>Đăng nhập</Button>
+              {userAcept !== null ?
+                (<div>
+                  <Button onClick={this.onClickUser}>
+                    <label style={{ color: "#fff", fontSize: 12 }}>{`Xin chào ${userAcept}`}</label>
+                  </Button>
+                  <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={this.handleClose}
+                  >
+                    <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+                  </Menu>
+                </div>)
+                :
+                <Button variant="text" className={classes.button} onClick={this.onOpenLogin}>Đăng nhập</Button>
+              }
             </div>
           </div>
-
-
         </AppBar>
       </div>
     );
   }
 }
-export default withStyles(useStyles)(NavBar);
+
+const mapStateToProps = state => {
+  return {
+    isLogin: state.UserLoginReducer.isLogin,
+    user: state.SessionUserReducer.user,
+  };
+};
+
+
+export default withRouter(compose(withStyles(useStyles),
+  connect(
+    mapStateToProps, {
+    deleteSessionUser
+  }))(NavBar)
+);

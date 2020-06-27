@@ -16,7 +16,6 @@ export const getListAdmin = () => async dispatch => {
 
 export const getAdminById = id => async dispatch => {
   const response = await apis.get(`${ADMIN_URL}/${id}`);
-  console.log("response", response);
   const { status } = response;
   if (status === 200) {
     dispatch({

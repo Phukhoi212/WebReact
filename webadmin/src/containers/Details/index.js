@@ -1,10 +1,22 @@
 import React from "react";
 import compose from "recompose/compose";
 import { connect } from "react-redux";
-import { getListProduct, getProductById, getCommentOfProduct, getListCustormer } from "./actions";
-import { withStyles, IconButton, Button } from "@material-ui/core";
+import {
+  getListProduct,
+  getProductById,
+  getCommentOfProduct,
+  getListCustormer,
+  getCustormerById,
+  sendComment,
+  resetCommentList,
+} from "./actions";
+import { getListFarm } from "../BuyProduct/actions";
+import { withStyles, IconButton, Button, TextareaAutosize } from "@material-ui/core";
 import Rating from '@material-ui/lab/Rating';
-import Header from "../../components/Header";
+//import Header from "../../components/Header";
+import LoadingIndicator from "../../components/LoadingIndicator";
+import { format_curency } from "../../utils/tool";
+import UserLogin from "../UserLogin";
 import ShareIcon from '@material-ui/icons/Share';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import AddIcon from '@material-ui/icons/Add';
@@ -19,7 +31,8 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import "./Detail.css";
-import { get } from "lodash";
+import { get, includes } from "lodash";
+import moment from "moment";
 
 const useStyles = () => ({
   root: {
@@ -170,15 +183,34 @@ class Detail extends React.Component {
     number: 1,
     like: false,
     listBuy: [],
+    openLogin: false,
+    commentText: "",
+    listComment: [],
   }
 
   componentDidMount() {
     window.scrollTo(0, 0);
+    const userId = localStorage.getItem("userId");
+    if (userId !== null) {
+      this.props.getCustormerById(userId);
+    }
     this.props.getListProduct();
     const id = this.props.match.params.id;
     this.props.getProductById(id);
     this.props.getCommentOfProduct(id);
     this.props.getListCustormer();
+    this.props.getListFarm();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      listComment: nextProps.comment,
+    })
+  }
+
+
+  componentWillUnmount() {
+    this.props.resetCommentList();
   }
 
   onClickAddIcon = () => {
@@ -195,23 +227,61 @@ class Detail extends React.Component {
     })
   }
 
-  onClickMuaHang = () => {
+  onChangeComment = (e) => {
     this.setState({
-      listBuy: [...this.state.listBuy, this.props.product]
-    }, () => this.props.history.push({ pathname: '/product/buy', state: [this.props.product, this.state.number] }))
+      commentText: e.target.value,
+    })
+  }
+
+  onClickSendComment = () => {
+    const { commentText } = this.state;
+    const { customer, product } = this.props;
+    const date = moment().format("DD/MM/YYYY")
+    const userId = localStorage.getItem("userId");
+    if (userId === null) {
+      this.setState({ openLogin: true })
+    } else {
+      this.props.sendComment(commentText, date, product.Ma_SanPham, customer.Ma_KhachHang, product.Ma_SanPham);
+      this.setState({
+        commentText: "",
+      });
+      this.forceUpdate();
+    }
+
+  }
+
+  onClickMuaHang = () => {
+    const userId = localStorage.getItem("userId");
+    if (userId === null) {
+      this.setState({ openLogin: true })
+    } else {
+      this.setState({
+        listBuy: [...this.state.listBuy, this.props.product]
+      }, () => this.props.history.push({ pathname: '/product/buy', state: [this.props.product, this.state.number] }))
+    }
+  }
+
+  onClickGoToShop = () => {
+    const { product } = this.props;
+    this.props.history.push({ pathname: `/shop/${product.Ma_NongTrai}`, state: product.Ma_NongTrai })
   }
 
   render() {
-    const { classes, product, comment, listCustomer } = this.props;
-    const getComment = listCustomer.find(i => i.Ma_KhachHang === comment.Ma_KhachHang);
-    console.log("====>comment", get(getComment, "TenKhachHang", ""))
-    const { number, like } = this.state;
+    const { classes, product, comment, listCustomer, listFarm, customer, isLoading } = this.props;
+    const getFarm = listFarm.find(i => i.Ma_NongTrai === product.Ma_NongTrai);
+    const getComment = listCustomer.filter(cus => comment.find(i => i.Ma_KhachHang === cus.Ma_KhachHang));
+    const { number, like, openLogin, commentText, listComment } = this.state;
     const alert = "Sản phẩm này là tài sản cá nhân được bán bởi Nhà Bán Hàng Cá Nhân và không thuộc đối tượng phải chịu thuế GTGT. Do đó hóa đơn VAT không được cấp trong trường hợp này."
+    console.log("---->customer", comment, getComment.find(i => i.Ma_KhachHang === comment.Ma_KhachHang))
+
     return (
       <div className={classes.root}>
-        <Header />
         {/* Container */}
         <div style={{ width: "100%", marginTop: 25 }}>
+          <UserLogin
+            open={openLogin}
+            onBackdropClick={() => this.setState({ openLogin: false })}
+          />
           <div className={classes.container}>
             <div className={classes.left}>
               <div className={classes.image}>
@@ -252,7 +322,7 @@ class Detail extends React.Component {
 
               <div className={classes.price}>
                 <div className={classes.price_detail}>
-                  <span style={{ color: "#f57224", fontSize: 30 }}>{product.GiaSanPham}</span>
+                  <span style={{ color: "#f57224", fontSize: 30 }}>{(product.GiaSanPham)}</span>
                 </div>
               </div>
 
@@ -352,7 +422,7 @@ class Detail extends React.Component {
                 <div style={{ width: "100%", display: "flex", paddingBottom: 15, borderBottom: "1px solid #eff0f5" }}>
                   <div style={{ width: "50%", textAlign: "start" }}>
                     <div style={{ fontSize: 12 }}>Được bán bởi</div>
-                    <div style={{ color: "blue" }}>Anh Dũng Shop</div>
+                    <div style={{ color: "blue" }}>{get(getFarm, "TenNongTrai", "")}</div>
                   </div>
                   <div style={{ width: "50%", textAlign: "center" }}>
                     <IconButton size="small">
@@ -378,7 +448,7 @@ class Detail extends React.Component {
                 </div>
                 {/*Go to Shop */}
                 <div style={{ width: "100%", textAlign: "center" }}>
-                  <Button style={{ color: "blue" }} variant="text">Đến Gian Hàng</Button>
+                  <Button style={{ color: "blue" }} variant="text" onClick={this.onClickGoToShop}>Đến Gian Hàng</Button>
                 </div>
               </div>
             </div>
@@ -496,58 +566,97 @@ class Detail extends React.Component {
                 </div>
 
 
-                {/*Filter comment*/}
+                {/*Head comment*/}
                 <div style={{ width: "100%", backgroundColor: "#fafafa", height: 50, lineHeight: "50px" }}>
                   <div style={{ paddingLeft: 20, textAlign: "start", fontWeight: "bold" }}>
                     Đánh giá sản phẩm: {product.TenSanPham}
                   </div>
                 </div>
 
-                <div style={{ width: "100%", backgroundColor: "#fff", height: "auto", marginTop: 20, display: "flex" }}>
-                  <div style={{ width: "30%", textAlign: "start", paddingLeft: 20 }}>
-                    <div>
-                      <Rating value={4} readOnly size="small" />
+                {/*Comment */}
+                {listComment.map(cmt => (
+                  <div key={cmt.Ma_BinhLuan}>
+                    <div style={{ width: "100%", backgroundColor: "#fff", height: "auto", marginTop: 20, display: "flex" }}>
+
+                      <div style={{ width: "30%", textAlign: "start", paddingLeft: 20 }}>
+                        <div>
+                          <Rating value={4} readOnly size="small" />
+                        </div>
+
+                        <div>
+                          <label style={{ fontSize: 12, marginLeft: 5 }}>
+                            bởi: {get(listCustomer.find(i => i.Ma_KhachHang === cmt.Ma_KhachHang), "TenKhachHang", "")}
+                          </label>
+                        </div>
+
+                      </div>
+                      <div style={{ width: "70%", textAlign: "end" }}>
+                        <label style={{ fontSize: 12, marginRight: 20 }}>{cmt.NgayBinhLuan}</label>
+                      </div>
                     </div>
-                    <div>
-                      <label style={{ fontSize: 12, marginLeft: 5 }}>bởi: {get(getComment, "TenKhachHang", "")}</label>
+
+                    <div style={{ width: "100%", backgroundColor: "#fff", height: "auto", marginTop: 20, textAlign: "start" }}>
+                      <label style={{ paddingLeft: 22 }}>{cmt.NoiDung}</label>
+                    </div>
+
+
+                    {/*Like and edit comment */}
+                    < div style={{ width: "100%", backgroundColor: "#fff", marginTop: 20, display: "flex", paddingBottom: 20, borderBottom: "1px solid #e9e7e7" }}>
+                      <div style={{ width: "30%", textAlign: "start", paddingLeft: 20 }}>
+                        <IconButton size="small" onClick={this.onClickLikeButton} color={like ? "primary" : "default"}>
+                          <ThumbUpAltIcon />
+                        </IconButton>
+                      </div>
+
+                      <div style={{ width: "70%", textAlign: "end" }}>
+                        <IconButton size="small">
+                          <MoreVertIcon />
+                        </IconButton>
+                      </div>
                     </div>
                   </div>
-                  <div style={{ width: "70%", textAlign: "end" }}>
-                    <label style={{ fontSize: 12, marginRight: 20 }}>{comment.NgayBinhLuan}</label>
-                  </div>
-                </div>
-
-                <div style={{ width: "100%", backgroundColor: "#fff", height: "auto", marginTop: 20, textAlign: "start" }}>
-                  <label style={{ paddingLeft: 22 }}>{comment.NoiDung}</label>
-                </div>
-
-                <div style={{ width: "100%", backgroundColor: "#fff", marginTop: 20, display: "flex", paddingBottom: 20 }}>
-                  <div style={{ width: "30%", textAlign: "start", paddingLeft: 20 }}>
-                    <IconButton size="small" onClick={this.onClickLikeButton} color={like ? "primary" : "default"}>
-                      <ThumbUpAltIcon />
-                    </IconButton>
-                    0
-                  </div>
-
-                  <div style={{ width: "70%", textAlign: "end" }}>
-                    <IconButton size="small">
-                      <MoreVertIcon />
-                    </IconButton>
-                  </div>
-                </div>
+                ))}
 
 
-                {/** */}
               </div>
-
-
-
               <div className={classes.right_info}></div>
 
             </div>
+
+            <div className={classes.danhgia}>
+              {/* <LoadingIndicator /> */}
+              <div className={classes.rating_content}>
+                {/**Box Comment */}
+                <div style={{ width: "100%", height: 250 }}>
+                  <div style={{ width: "100%", height: 40, fontWeight: "bold", padding: 10 }}>Nhập Bình Luận: </div>
+                  <div style={{ width: "94%", margin: "0 auto", height: 140, marginTop: 5 }}>
+                    <TextareaAutosize
+                      style={{ width: "100%", maxHeight: 140, minHeight: 140 }}
+                      placeholder="Nhập bình luận..."
+                      value={commentText}
+                      onChange={this.onChangeComment}
+                    />
+                  </div>
+                  <div style={{ width: "94%", margin: "0 auto", height: 40, marginTop: 10 }}>
+                    <Button
+                      style={{ float: "right", width: "15%" }}
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      onClick={this.onClickSendComment}
+                      disabled={commentText.trim() === "" ? true : false}
+                    >
+                      Gửi
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              <div className={classes.right_info}></div>
+            </div>
           </div>
         </div>
-      </div>
+      </div >
     );
   }
 }
@@ -557,6 +666,9 @@ const mapStateToProps = state => {
     product: state.DetailReducer.product,
     comment: state.DetailReducer.comment,
     listCustomer: state.DetailReducer.listCustomer,
+    customer: state.DetailReducer.customer,
+    listFarm: state.BuyProductReducer.farmList,
+    isLoading: state.DetailReducer.isLoading,
   };
 };
 
@@ -568,5 +680,9 @@ export default
       getProductById,
       getCommentOfProduct,
       getListCustormer,
+      getListFarm,
+      getCustormerById,
+      sendComment,
+      resetCommentList,
     })
   )(Detail);

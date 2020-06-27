@@ -11,12 +11,16 @@ const initialState = {
 export default (state = initialState, action) => {
   const { type, data } = action;
   switch (type) {
-    case actions.LOGIN_UPDATE: {
+    case actions.USER_LOGIN_UPDATE: {
       return { ...state, ...data };
     }
-    case actions.LOGIN_SUCCESS:
+    case actions.USER_LOGIN_SUCCESS:
+      const { token, user, userId } = action.payload;
+      global.localStorage.setItem("user_token", token);
+      global.localStorage.setItem("user", JSON.stringify(user));
+      global.localStorage.setItem("userId", JSON.stringify(userId));
       return { ...state, isLogin: true };
-    case actions.LOGIN_FAILURE:
+    case actions.USER_LOGIN_FAILURE:
       return { ...state, ...data };
     case actions.USER_LOGIN_SUBMITTING: {
       return { ...state, ...data };

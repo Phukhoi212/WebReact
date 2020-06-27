@@ -17,6 +17,9 @@ export const getListProduct = () => async dispatch => {
 };
 
 export const getProductById = id => async dispatch => {
+  dispatch({
+    type: actions.PRE_FETCH,
+  });
   const response = await apis.get(`${PRODUCT_URL}/${id}`);
   const { status } = response;
   if (status === 200) {
@@ -25,6 +28,9 @@ export const getProductById = id => async dispatch => {
       payload: response.data || {},
     });
   }
+  dispatch({
+    type: actions.POST_FETCH,
+  });
 };
 
 export const getCommentOfProduct = id => async dispatch => {
@@ -47,4 +53,37 @@ export const getListCustormer = () => async dispatch => {
       payload: response.data || [],
     });
   }
+};
+
+export const getCustormerById = (id) => async dispatch => {
+  const response = await apis.get(`${CUSTOMER_URL}/${id}`);
+  const { status } = response;
+  if (status === 200) {
+    dispatch({
+      type: actions.GET_CUSTOMER_BY_ID,
+      payload: response.data || {},
+    });
+  }
+};
+
+export const sendComment = (description, date_comment, product_id, customer_id, id) => async dispatch => {
+  const response = await apis.post(COMMENT_URL, {
+    description,
+    date_comment,
+    product_id,
+    customer_id
+  });
+  const { status } = response;
+  if (status === 200) {
+    dispatch({
+      type: actions.ADD_COMMENT,
+    });
+    dispatch(getCommentOfProduct(id))
+  }
+};
+
+export const resetCommentList = () => async dispatch => {
+  dispatch({
+    type: actions.RESET_COMMENT_LIST
+  });
 };

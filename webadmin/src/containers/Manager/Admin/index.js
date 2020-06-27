@@ -7,7 +7,6 @@ import { connect } from "react-redux";
 import DialogComponent from "../../../components/Dialog";
 import ConfirmDialog from "../../../components/ConfirmDialog";
 import Input from "../../../components/Input";
-import DateTime from "../../../components/DateTime";
 import { Button, Paper } from "@material-ui/core";
 
 const columns = [
@@ -190,7 +189,6 @@ class Admin extends React.Component {
             }
           ]}
         />
-        <DateTime />
         <DialogComponent
           open={this.state.openDialog}
           onBackdropClick={() => this.setState({ openDialog: false })}

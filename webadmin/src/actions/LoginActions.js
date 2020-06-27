@@ -17,11 +17,11 @@
 //   return (dispatch, getState) => {
 //     dispatch({ type: ACTION.LOGIN_START });
 
-//     const email = getState().LoginReducer.email;
+//     const username = getState().LoginReducer.username;
 //     const password = getState().LoginReducer.password;
 
-//     return fetch(`${PROTOCOL}://${HOST}:${PORT}/v1/login`, {
-//       body: JSON.stringify({ email, password }),
+//     return fetch(`${PROTOCOL}://${HOST}:${PORT}/admins/login`, {
+//       body: JSON.stringify({ username, password }),
 //       method: "POST",
 //     })
 //       .then(response => response.json())
@@ -51,23 +51,6 @@
 //         });
 //         return Promise.reject(error);
 //       });
-//   };
-// }
-
-// /**
-//  *
-//  * Update Email
-//  *
-//  * @param email
-//  * @returns Object
-//  *
-//  */
-// export function updateEmail(email) {
-//   return dispatch => {
-//     dispatch({
-//       type: ACTION.UPDATE_EMAIL,
-//       payload: email,
-//     });
 //   };
 // }
 

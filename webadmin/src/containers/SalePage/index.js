@@ -2,7 +2,7 @@ import React from "react";
 import compose from "recompose/compose";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
-import { getListProduct, updateActiePage, getFarmShopById } from "./actions";
+import { getListSale, updateActiePage } from "./actions";
 import Pagination from "react-js-pagination";
 import CardComponent from "../../components/Card";
 import Footer from "../../components/Footer";
@@ -55,13 +55,11 @@ const useStyles = () => ({
 })
 
 
-class ShopDetail extends React.Component {
+class SalePage extends React.Component {
 
   componentDidMount() {
     window.scrollTo(0, 0);
-    const idFarm = this.props.history.location.state;
-    this.props.getListProduct(idFarm);
-    this.props.getFarmShopById(idFarm);
+    this.props.getListSale();
   }
 
   handlePageChange = pageNumber => {
@@ -69,12 +67,12 @@ class ShopDetail extends React.Component {
   };
 
   render() {
-    console.log("==>info", this.props.farmInfo);
-    const { classes, listProduct, activePage } = this.props;
+    console.log("==>info", this.props.listSale);
+    const { classes, listSale, activePage } = this.props;
     const itemInPage = 10;
     const begin = (activePage - 1) * itemInPage,
       end = begin + itemInPage;
-    const productInPage = listProduct.slice(begin, end);
+    const productInPage = listSale.slice(begin, end);
     return (
       <div className={classes.root}>
         <div className={classes.header}>
@@ -87,15 +85,15 @@ class ShopDetail extends React.Component {
             </div>
             <div style={{ width: "100%" }}>
               <div className={classes.list}>
-                  {productInPage.map(product => (
-                    <CardComponent
-                      key={product.Ma_SanPham}
-                      src={product.Image_Url}
-                      name={product.TenSanPham}
-                      price={product.GiaSanPham}
-                      id={product.Ma_SanPham}
-                    />
-                  ))}
+                {productInPage.map(product => (
+                  <CardComponent
+                    key={product.Ma_SanPham}
+                    src={product.Image_Url}
+                    name={product.TenSanPham}
+                    price={product.GiaSanPham}
+                    id={product.Ma_SanPham}
+                  />
+                ))}
 
               </div>
 
@@ -110,7 +108,7 @@ class ShopDetail extends React.Component {
                 lastPageText="⟩⟩"
                 activePage={this.props.activePage}
                 itemsCountPerPage={itemInPage}
-                totalItemsCount={listProduct.length}
+                totalItemsCount={listSale.length}
                 pageRangeDisplayed={5}
                 onChange={this.handlePageChange}
               />
@@ -127,9 +125,8 @@ class ShopDetail extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    listProduct: state.ShopDetailReducer.listProduct,
-    activePage: state.ShopDetailReducer.activePage,
-    farmInfo: state.ShopDetailReducer.farmInfo,
+    listSale: state.SalePageReducer.listSale,
+    activePage: state.SalePageReducer.activePage,
   };
 };
 
@@ -137,8 +134,7 @@ export default
   compose(
     withStyles(useStyles),
     connect(mapStateToProps, {
-      getListProduct,
+      getListSale,
       updateActiePage,
-      getFarmShopById,
     })
-  )(ShopDetail);
+  )(SalePage);
