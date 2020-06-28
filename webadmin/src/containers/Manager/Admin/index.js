@@ -1,7 +1,7 @@
 import React from 'react';
 import MaterialTable from 'material-table';
 import { withStyles } from "@material-ui/core/styles";
-import { getListAdmin, getAdminById, deleteAdminById, createAdmin } from "./actions";
+import { getListAdmin, getAdminById, deleteAdminById, createAdmin, updateAdminById } from "./actions";
 import compose from "recompose/compose";
 import { connect } from "react-redux";
 import DialogComponent from "../../../components/Dialog";
@@ -75,6 +75,7 @@ class Admin extends React.Component {
     this.setState({
       openDialog: true,
       type: "edit",
+      id: id,
     }, () => this.props.getAdminById(id));
   }
 
@@ -111,9 +112,40 @@ class Admin extends React.Component {
     this.setState({ openDialog: false, openNotification: true })
   }
 
+  onCloseForm = () => {
+    this.setState({
+      id: "",
+      name: "",
+      email: "",
+      birthYear: "",
+      phoneNumber: "",
+      address: "",
+      userName: "",
+      password: "",
+      type: "",
+      openDialog: false
+    })
+  }
+
+  onUpdateAdmin = () => {
+    const { id } = this.state;
+    const { admin } = this.props;
+    const Admin = {
+      Ten_AD: this.state.name || admin.Ten_AD,
+      Email: this.state.email || admin.Email,
+      NgaySinh: this.state.birthYear || admin.NgaySinh,
+      DiaChi: this.state.address || admin.DiaChi,
+      SDT: this.state.phoneNumber || admin.SDT,
+      TenDangNhap: this.state.userName || admin.TenDangNhap,
+      MatKhau: this.state.password || admin.MatKhau,
+    }
+    this.props.updateAdminById(id, Admin);
+    this.setState({ openDialog: false, openNotification: true })
+  }
+
   render() {
     const { admin, classes } = this.props;
-    const { openConfirmDialog, name } = this.state;
+    const { openConfirmDialog, name, email, birthYear, address, phoneNumber, userName, password, type } = this.state;
     const content =
       <Paper style={{ padding: "1rem" }}>
         <Input
@@ -124,43 +156,43 @@ class Admin extends React.Component {
         />
         <Input
           label="Tên"
-          value={admin.Ten_AD}
+          value={type === "add" ? name : admin.Ten_AD}
           name="name"
           onChange={this.onChangeTextValue}
         />
         <Input
           label="Email"
-          value={admin.Email}
+          value={type === "add" ? email : admin.Email}
           name="email"
           onChange={this.onChangeTextValue}
         />
         <Input
           label="Ngày Sinh"
-          value={admin.NgaySinh}
+          value={type === "add" ? birthYear : admin.NgaySinh}
           onChange={this.onChangeTextValue}
           name="birthYear"
         />
         <Input
           label="Số Điện Thoại"
-          value={admin.SDT}
+          value={type === "add" ? phoneNumber : admin.SDT}
           onChange={this.onChangeTextValue}
           name="phoneNumber"
         />
         <Input
           label="Địa Chỉ"
-          value={admin.DiaChi}
+          value={type === "add" ? address : admin.DiaChi}
           onChange={this.onChangeTextValue}
           name="address"
         />
         <Input
           label="Tên Đăng Nhập"
-          value={admin.TenDangNhap}
+          value={type === "add" ? userName : admin.TenDangNhap}
           onChange={this.onChangeTextValue}
           name="userName"
         />
         <Input
           label="Mật Khẩu"
-          value={admin.MatKhau}
+          value={type === "add" ? password : admin.MatKhau}
           onChange={this.onChangeTextValue}
           name="password"
         />
@@ -194,8 +226,9 @@ class Admin extends React.Component {
           onBackdropClick={() => this.setState({ openDialog: false })}
           type={this.state.type}
           content={content}
-          onClose={() => this.setState({ openDialog: false })}
-          Confirm={this.onClickAddNewAdmin}
+          onClose={this.onCloseForm}
+          Confirm={type === "add" ? this.onClickAddNewAdmin : this.onUpdateAdmin}
+          actions={true}
         />
         <ConfirmDialog
           title={`Bạn có muốn xóa admin `}
@@ -225,5 +258,6 @@ export default
       getAdminById,
       deleteAdminById,
       createAdmin,
+      updateAdminById,
     })
   )(Admin);

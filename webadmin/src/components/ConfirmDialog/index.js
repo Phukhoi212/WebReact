@@ -19,7 +19,6 @@ class ConfirmDialog extends React.Component {
     this.props.onConfirm();
   }
   render() {
-    //console.log("Props", this.props);
     return (
       <div>
         <Dialog

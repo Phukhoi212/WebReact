@@ -67,7 +67,6 @@ class SalePage extends React.Component {
   };
 
   render() {
-    console.log("==>info", this.props.listSale);
     const { classes, listSale, activePage } = this.props;
     const itemInPage = 10;
     const begin = (activePage - 1) * itemInPage,

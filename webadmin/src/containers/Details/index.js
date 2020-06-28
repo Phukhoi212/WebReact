@@ -9,14 +9,14 @@ import {
   getCustormerById,
   sendComment,
   resetCommentList,
-  updateAddToCard,
+  storeAddToCard,
 } from "./actions";
 import { getListFarm } from "../BuyProduct/actions";
 import { withStyles, IconButton, Button, TextareaAutosize } from "@material-ui/core";
 import Rating from '@material-ui/lab/Rating';
 //import Header from "../../components/Header";
-import LoadingIndicator from "../../components/LoadingIndicator";
-import { format_curency } from "../../utils/tool";
+//import LoadingIndicator from "../../components/LoadingIndicator";
+//import { format_curency } from "../../utils/tool";
 import UserLogin from "../UserLogin";
 import ShareIcon from '@material-ui/icons/Share';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
@@ -270,21 +270,25 @@ class Detail extends React.Component {
   }
 
   onClickAddToCard = () => {
-    this.setState({
-      openAddToCard: true,
-      listBuy: [...this.state.listBuy, this.props.product]
-    }, () => {
-      this.props.updateAddToCard(this.state.listBuy);
-    })
-
+    const userId = localStorage.getItem("userId");
+    if (userId === null) {
+      this.setState({ openLogin: true })
+    } else {
+      this.setState({
+        openAddToCard: true,
+        listBuy: [...this.props.listBuyProduct, this.props.product]
+      }, () => {
+        this.props.storeAddToCard(this.state.listBuy);
+      })
+    }
   }
 
   render() {
-    console.log("listBuyProduct", this.props.listBuyProduct);
-    const { classes, product, listCustomer, listFarm, customer, isLoading, listBuyProduct } = this.props;
+    const { classes, product, listCustomer, listFarm } = this.props;
     const getFarm = listFarm.find(i => i.Ma_NongTrai === product.Ma_NongTrai);
-    const { number, like, openLogin, commentText, listComment, openAddToCard, listBuy } = this.state;
+    const { number, like, openLogin, commentText, listComment, openAddToCard } = this.state;
     const alert = "Sản phẩm này là tài sản cá nhân được bán bởi Nhà Bán Hàng Cá Nhân và không thuộc đối tượng phải chịu thuế GTGT. Do đó hóa đơn VAT không được cấp trong trường hợp này."
+    const userId = localStorage.getItem("userId");
 
     return (
       <div className={classes.root}>
@@ -297,7 +301,7 @@ class Detail extends React.Component {
           <AddToCardDialog
             openAddToCard={openAddToCard}
             onBackdropClick={() => this.setState({ openAddToCard: false })}
-            products={listBuyProduct}
+            products={product}
             count={number}
           />
           <div className={classes.container}>
@@ -642,37 +646,40 @@ class Detail extends React.Component {
 
             </div>
 
-            <div className={classes.danhgia}>
-              {/* <LoadingIndicator /> */}
-              <div className={classes.rating_content}>
-                {/**Box Comment */}
-                <div style={{ width: "100%", height: 250 }}>
-                  <div style={{ width: "100%", height: 40, fontWeight: "bold", padding: 10 }}>Nhập Bình Luận: </div>
-                  <div style={{ width: "94%", margin: "0 auto", height: 140, marginTop: 5 }}>
-                    <TextareaAutosize
-                      style={{ width: "100%", maxHeight: 140, minHeight: 140 }}
-                      placeholder="Nhập bình luận..."
-                      value={commentText}
-                      onChange={this.onChangeComment}
-                    />
-                  </div>
-                  <div style={{ width: "94%", margin: "0 auto", height: 40, marginTop: 10 }}>
-                    <Button
-                      style={{ float: "right", width: "15%" }}
-                      fullWidth
-                      variant="contained"
-                      color="primary"
-                      onClick={this.onClickSendComment}
-                      disabled={commentText.trim() === "" ? true : false}
-                    >
-                      Gửi
+            {userId === null ? "" :
+              <div className={classes.danhgia}>
+                <div className={classes.rating_content}>
+                  <div style={{ width: "100%", height: 250 }}>
+                    <div style={{ width: "100%", height: 40, fontWeight: "bold", padding: 10 }}>Nhập Bình Luận: </div>
+                    <div style={{ width: "94%", margin: "0 auto", height: 140, marginTop: 5 }}>
+                      <TextareaAutosize
+                        style={{ width: "100%", maxHeight: 140, minHeight: 140 }}
+                        placeholder="Nhập bình luận..."
+                        value={commentText}
+                        onChange={this.onChangeComment}
+                      />
+                    </div>
+                    <div style={{ width: "94%", margin: "0 auto", height: 40, marginTop: 10 }}>
+                      <Button
+                        style={{ float: "right", width: "15%" }}
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        onClick={this.onClickSendComment}
+                        disabled={commentText.trim() === "" ? true : false}
+                      >
+                        Gửi
                     </Button>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className={classes.right_info}></div>
-            </div>
+
+
+
+                <div className={classes.right_info}></div>
+              </div>
+            }
           </div>
         </div>
       </div >
@@ -704,6 +711,6 @@ export default
       getCustormerById,
       sendComment,
       resetCommentList,
-      updateAddToCard,
+      storeAddToCard,
     })
   )(Detail);

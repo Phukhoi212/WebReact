@@ -88,9 +88,7 @@ export const resetCommentList = () => async dispatch => {
   });
 };
 
-export const updateAddToCard = product => async dispatch => {
-  dispatch({
+export const storeAddToCard = product => ({
     type: actions.ADD_TO_CARD,
-    payload: product
-  });
-};
+    payload: product || []
+});

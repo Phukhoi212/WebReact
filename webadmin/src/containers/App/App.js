@@ -17,7 +17,6 @@ import "./App.css";
 
 class App extends Component {
   render() {
-    console.log("location", window.location.pathname)
     const location = window.location.pathname;
     const adminRoute = '/manager';
     return (

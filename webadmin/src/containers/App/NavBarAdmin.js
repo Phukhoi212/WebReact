@@ -91,7 +91,7 @@ class NavBarAdmin extends React.Component {
 
   render() {
     const Admin = localStorage.getItem("admin");
-    const { classes, admin } = this.props;
+    const { classes } = this.props;
     const { openLogin, anchorEl } = this.state;
     return (
       <div className={classes.root}>

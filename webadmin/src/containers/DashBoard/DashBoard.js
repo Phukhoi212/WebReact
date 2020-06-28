@@ -15,10 +15,6 @@ import ListDashBoard from './listItems';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import PermMediaIcon from '@material-ui/icons/PermMedia';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import PeopleIcon from '@material-ui/icons/People';
-import BarChartIcon from '@material-ui/icons/BarChart';
-import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import Chart from './Chart';
 import Deposits from './Deposits';
@@ -173,9 +169,8 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { open, index } = this.state;
+    const { open } = this.state;
     const { classes } = this.props;
-    console.log("====>index", index)
 
     return (
       <div className={classes.root}>
@@ -235,23 +230,6 @@ class Dashboard extends React.Component {
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Container maxWidth="lg" className={classes.container}>
-            {/* <Grid container spacing={3}>
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper className={fixedHeightPaper}>
-                  <Chart />
-                </Paper>
-              </Grid>
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper className={fixedHeightPaper}>
-                  <Deposits />
-                </Paper>
-              </Grid>
-              <Grid item xs={12}>
-                <Paper className={classes.paper}>
-                  <Orders />
-                </Paper>
-              </Grid>
-            </Grid> */}
             {this.renderContainer()}
           </Container>
         </main>

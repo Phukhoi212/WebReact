@@ -53,5 +53,6 @@ export const updateAdminById = (id, admin) => async dispatch => {
       type: actions.UPDATE_ADMIN,
       payload: response.data,
     })
+    dispatch(getListAdmin());
   }
 }

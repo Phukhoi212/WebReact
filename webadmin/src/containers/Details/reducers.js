@@ -28,7 +28,7 @@ export default (state = initialState, action) => {
     case actions.POST_FETCH:
       return { ...state, isLoading: false };
     case actions.ADD_TO_CARD:
-      return { ...state, listBuyProduct: action.payload }
+      return { ...state, listBuyProduct: action.payload || []}
     default:
       return state;
   }

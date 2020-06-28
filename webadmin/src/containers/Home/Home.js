@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles, Button } from "@material-ui/core";
+import { withStyles } from "@material-ui/core";
 import compose from "recompose/compose";
 import { connect } from "react-redux";
 import { getListProduct, getListProductBySearch, updateActiePage, getListProductSale } from "./actions";
@@ -100,7 +100,6 @@ class Home extends React.Component {
     const begin = (activePage - 1) * 10,
       end = begin + 10;
     const productInPage = searchResult.length !== 0 ? searchResult.slice(begin, end) : listProduct.slice(begin, end);
-    console.log("home", listBuyProduct)
     return (
       <div className={classes.root}>
         <div className={classes.header}>
@@ -108,6 +107,7 @@ class Home extends React.Component {
             search={this.state.keywordSearch}
             onChange={this.onChangeKeywordSearch}
             onClick={this.onClickSearchIcon}
+            countProductOfCard={listBuyProduct.length}
           />
         </div>
         {searchResult.length !== 0 ? "" :

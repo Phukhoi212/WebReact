@@ -48,6 +48,10 @@ class UserLogin extends React.Component {
   userLogin = () => {
     const { username, password } = this.state;
     this.props.userLogin(username, password);
+    this.setState({
+      username: "",
+      password: ""
+    })
   }
 
   render() {
@@ -69,10 +73,10 @@ class UserLogin extends React.Component {
                   />
                   <label className={classes.text}>Mật khẩu</label>
                   <Input
-                    type="password"
                     name="password"
                     value={password}
                     onChange={this.onChangeValue}
+                    type="password"
                   />
                 </div>
                 <div className={classes.right}>
@@ -92,10 +96,8 @@ class UserLogin extends React.Component {
                     <div style={{ color: "#fff", marginLeft: 5 }}>GOOGLE</div>
                   </Button>
                 </div>
-
               </div>
             </form>
-
           </DialogContent>
         </Dialog>
       </div>

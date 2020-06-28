@@ -8,6 +8,7 @@ import Input from "../../components/Input";
 import { Button, DialogActions } from "@material-ui/core";
 import Footer from "../../components/Footer";
 import Dialog from "@material-ui/core/Dialog";
+import Stepper from "../../components/Stepper";
 import { getListFarm, createOder, addDataForOderDetail } from "./actions";
 import { get } from "lodash";
 import "./Buy.css";
@@ -60,6 +61,7 @@ class BuyProduct extends React.Component {
       name: "",
       openConfirm: false,
       notes: "",
+      onClickButtonBuy: false,
     }
   }
   componentDidMount() {
@@ -74,7 +76,7 @@ class BuyProduct extends React.Component {
   }
 
   onClickPay = () => {
-    const { address, notes } = this.state;
+    const { address, notes, name, phoneNumber } = this.state;
     const userId = localStorage.getItem("userId");
     const bill = {
       address: address,
@@ -82,8 +84,12 @@ class BuyProduct extends React.Component {
       note: notes,
       id_cus: userId
     }
-    this.props.createOder(bill);
-    this.setState({ openConfirm: true })
+    this.setState({ onClickButtonBuy: true })
+    if (address.trim() !== "" && name.trim() !== "" && phoneNumber.trim() !== "") {
+      this.props.createOder(bill);
+      this.setState({ openConfirm: true })
+    }
+
   }
 
   onClickConfirm = () => {
@@ -96,34 +102,40 @@ class BuyProduct extends React.Component {
       id_donhang: idOder
     }
     this.props.addDataForOderDetail(detail);
+    this.setState({
+      openConfirm: false
+    }, () => this.props.history.goBack())
   }
 
-
-
   render() {
-    const { classes, farmList, idOder } = this.props;
-    const { address, phoneNumber, name, notes } = this.state;
-    console.log("state", idOder);
+    const { classes, farmList } = this.props;
+    const { address, phoneNumber, name, notes, onClickButtonBuy } = this.state;
     const productSelected = this.props.history.location.state[0];
     const numberProduct = this.props.history.location.state[1];
     const shopName = farmList.find(i => i.Ma_NongTrai === productSelected.Ma_NongTrai);
-
+    const data = {
+      name: name,
+      address: address,
+      phone: phoneNumber,
+      date_oder: moment().format("DD/MM/YYYY"),
+      note: notes
+    }
     return (
       <div className={classes.root}>
         <Dialog
           open={this.state.openConfirm}
-          maxWidth="xs"
+          maxWidth="md"
           fullWidth
         >
           <div style={{ width: "100%" }}>
             <div style={{ padding: 50, margin: "0 auto" }}>
-              <label style={{ textAlign: "center", width: "100%", fontWeight: "bold" }}>
-                Thanh Toán Thành Công !!!
-              </label>
+              <Stepper
+                data={data}
+              />
             </div>
           </div>
           <DialogActions style={{ width: "100%", marginBottom: 20 }}>
-            <Button fullWidth style={{ width: "50%", margin: "0 auto" }} variant="contained" color="secondary" onClick={this.onClickConfirm}>
+            <Button fullWidth style={{ width: "20%", margin: "0 auto" }} variant="contained" color="secondary" onClick={this.onClickConfirm}>
               Xác Nhận
             </Button>
           </DialogActions>
@@ -141,15 +153,55 @@ class BuyProduct extends React.Component {
             <div style={{ width: "100%", display: "flex" }}>
               <div style={{ width: "50%", padding: 20 }}>
                 <label style={{ float: "left" }}>Họ và tên</label>
-                <Input onChange={this.onChangeText} name="name" value={name} placeholder={"Nhập họ và tên"} />
+                <Input
+                  onChange={this.onChangeText}
+                  name="name"
+                  value={name}
+                  placeholder={"Nhập họ và tên"}
+                  errorMessage={
+                    name.trim() === "" && onClickButtonBuy
+                      ? "Vui lòng nhập tên!"
+                      : ""
+                  }
+                />
                 <label style={{ float: "left", marginTop: 15 }}>Số điện thoại</label>
-                <Input onChange={this.onChangeText} name="phoneNumber" value={phoneNumber} placeholder={"Nhập số điện thoại nhận hàng"} />
+                <Input
+                  onChange={this.onChangeText}
+                  name="phoneNumber"
+                  value={phoneNumber}
+                  placeholder={"Nhập số điện thoại nhận hàng"}
+                  errorMessage={
+                    phoneNumber.trim() === "" && onClickButtonBuy
+                      ? "Xin hãy nhập số điện thoại!"
+                      : ""
+                  }
+                  inputProps={{ maxLength: 10, minLength: 10 }}
+                  onInput={e => {
+                    e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                  }}
+                />
               </div>
               <div style={{ width: "50%", padding: 20 }}>
                 <label style={{ float: "left" }}>Địa chỉ</label>
-                <Input onChange={this.onChangeText} name="address" value={address} placeholder={"Nhập địa chỉ nhận hàng"} />
+                <Input
+                  onChange={this.onChangeText}
+                  name="address"
+                  value={address}
+                  placeholder={"Nhập địa chỉ nhận hàng"}
+                  errorMessage={
+                    address.trim() === "" && onClickButtonBuy
+                      ? "Xin hãy nhập địa chỉ nhận hàng!"
+                      : ""
+                  }
+                />
                 <label style={{ float: "left", marginTop: 15 }}>Ghi Chú</label>
-                <Input onChange={this.onChangeText} name="notes" value={notes} placeholder={"Ghi chú"} />
+                <Input
+                  onChange={this.onChangeText}
+                  name="notes"
+                  value={notes}
+                  placeholder={"Ghi chú"}
+
+                />
               </div>
             </div>
 
@@ -249,15 +301,12 @@ class BuyProduct extends React.Component {
                     variant="contained"
                     onClick={this.onClickPay}
                   >
-                    Thanh Toán
+                    Đặt Hàng
                   </Button>
                 </div>
               </div>
-
-
             </div>
           </div>
-
         </div>
 
         <div className={classes.footer}>

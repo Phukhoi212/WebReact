@@ -5,7 +5,7 @@ import logo from "../../images/logo.png";
 import IconButton from '@material-ui/core/IconButton';
 import AddShoppingCartOutlinedIcon from '@material-ui/icons/AddShoppingCartOutlined';
 import Badge from '@material-ui/core/Badge';
-import SimpleMenu from "../Menu";
+//import AddToCard from "../../containers/Details/AddToCard";
 
 const useStyles = () => ({
   root: {
@@ -53,11 +53,20 @@ const StyledBadge = withStyles((theme) => ({
 
 
 class Header extends React.Component {
+  state = {
+    open: false,
+  }
+
+  onClickAddToCard = () => {
+    this.setState({
+      open: true
+    })
+  }
   render() {
     const { classes } = this.props;
-
     return (
       <div className={classes.root}>
+        {/* <AddToCard openAddToCard={this.state.open}/> */}
         <div className={classes.search}>
           <img
             alt="vhg"
@@ -65,8 +74,8 @@ class Header extends React.Component {
             style={{ width: "7rem", height: "4rem" }}
           />
           <Search value={this.props.search} onChange={this.props.onChange} onClick={this.props.onClick} />
-          <IconButton color="primary" size="medium" className={classes.addtoCart}>
-            <StyledBadge badgeContent={4}>
+          <IconButton color="primary" size="medium" className={classes.addtoCart} onClick={this.onClickAddToCard}>
+            <StyledBadge badgeContent={this.props.countProductOfCard}>
               <AddShoppingCartOutlinedIcon />
             </StyledBadge>
           </IconButton>

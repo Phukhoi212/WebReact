@@ -3,9 +3,11 @@ import compose from "recompose/compose";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import { getListProduct, updateActiePage, getFarmShopById } from "./actions";
+import { getListAdmin } from "../Manager/Admin/actions";
 import Pagination from "react-js-pagination";
 import CardComponent from "../../components/Card";
 import Footer from "../../components/Footer";
+import { get } from "lodash";
 
 const useStyles = () => ({
   root: {
@@ -27,8 +29,9 @@ const useStyles = () => ({
   header: {
     display: "block",
     marginBottom: 25,
-    height: 300,
-    backgroundColor: "#fff"
+    height: 150,
+    backgroundColor: "#fff",
+    textAlign: "center"
   },
   footer: {
   },
@@ -62,6 +65,7 @@ class ShopDetail extends React.Component {
     const idFarm = this.props.history.location.state;
     this.props.getListProduct(idFarm);
     this.props.getFarmShopById(idFarm);
+    this.props.getListAdmin();
   }
 
   handlePageChange = pageNumber => {
@@ -69,15 +73,28 @@ class ShopDetail extends React.Component {
   };
 
   render() {
-    console.log("==>info", this.props.farmInfo);
-    const { classes, listProduct, activePage } = this.props;
+    const { classes, listProduct, activePage, farmInfo, adminList } = this.props;
+    console.log("farminfo", farmInfo)
     const itemInPage = 10;
     const begin = (activePage - 1) * itemInPage,
       end = begin + itemInPage;
     const productInPage = listProduct.slice(begin, end);
+    const getAdmin = adminList.find(i => i.Ma_AD === farmInfo.Ma_AD);
     return (
       <div className={classes.root}>
         <div className={classes.header}>
+          <div>
+            <label>Tên Nông Trại: {farmInfo.TenNongTrai}</label>
+          </div>
+          <div>
+            <label>Chủ Nông Trại: {get(getAdmin, "Ten_AD", "")}</label>
+          </div>
+          <div>
+            <label>Số Điện Thoại: {farmInfo.SDT}</label>
+          </div>
+          <div>
+            <label>Địa Chỉ: {farmInfo.DiaChi}</label>
+          </div>
 
         </div>
         <div className={classes.container}>
@@ -87,15 +104,15 @@ class ShopDetail extends React.Component {
             </div>
             <div style={{ width: "100%" }}>
               <div className={classes.list}>
-                  {productInPage.map(product => (
-                    <CardComponent
-                      key={product.Ma_SanPham}
-                      src={product.Image_Url}
-                      name={product.TenSanPham}
-                      price={product.GiaSanPham}
-                      id={product.Ma_SanPham}
-                    />
-                  ))}
+                {productInPage.map(product => (
+                  <CardComponent
+                    key={product.Ma_SanPham}
+                    src={product.Image_Url}
+                    name={product.TenSanPham}
+                    price={product.GiaSanPham}
+                    id={product.Ma_SanPham}
+                  />
+                ))}
 
               </div>
 
@@ -130,6 +147,7 @@ const mapStateToProps = state => {
     listProduct: state.ShopDetailReducer.listProduct,
     activePage: state.ShopDetailReducer.activePage,
     farmInfo: state.ShopDetailReducer.farmInfo,
+    adminList: state.AdminReducer.adminList,
   };
 };
 
@@ -140,5 +158,6 @@ export default
       getListProduct,
       updateActiePage,
       getFarmShopById,
+      getListAdmin,
     })
   )(ShopDetail);

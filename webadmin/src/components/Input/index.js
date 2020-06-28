@@ -23,6 +23,7 @@ class Input extends React.Component {
           placeholder={this.props.placeholder}
           style={this.props.style}
           fullWidth
+          multiline
         />
       </form>
     );

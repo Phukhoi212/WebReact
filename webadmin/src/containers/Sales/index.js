@@ -42,7 +42,6 @@ const useStyles = () => ({
 class Sales extends React.Component {
   render() {
     const { classes, list } = this.props;
-    console.log("sale", list)
 
     return (
       <div className={classes.root}>
