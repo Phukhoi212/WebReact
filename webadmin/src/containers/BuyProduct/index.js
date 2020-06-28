@@ -5,11 +5,13 @@ import { withStyles } from "@material-ui/core/styles";
 import logo from "../../images/logo.png";
 import rau from "../../images/rau.jpg";
 import Input from "../../components/Input";
-import { Button } from "@material-ui/core";
+import { Button, DialogActions } from "@material-ui/core";
 import Footer from "../../components/Footer";
-import { getListFarm } from "./actions";
+import Dialog from "@material-ui/core/Dialog";
+import { getListFarm, createOder, addDataForOderDetail } from "./actions";
 import { get } from "lodash";
 import "./Buy.css";
+import moment from "moment";
 
 const useStyles = () => ({
   root: {
@@ -50,19 +52,82 @@ const useStyles = () => ({
 
 
 class BuyProduct extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      address: "",
+      phoneNumber: "",
+      name: "",
+      openConfirm: false,
+      notes: "",
+    }
+  }
   componentDidMount() {
     window.scrollTo(0, 0);
     this.props.getListFarm();
   }
 
+  onChangeText = e => {
+    this.setState({
+      [e.target.name]: e.target.value,
+    })
+  }
+
+  onClickPay = () => {
+    const { address, notes } = this.state;
+    const userId = localStorage.getItem("userId");
+    const bill = {
+      address: address,
+      date_oder: moment().format("DD/MM/YYYY"),
+      note: notes,
+      id_cus: userId
+    }
+    this.props.createOder(bill);
+    this.setState({ openConfirm: true })
+  }
+
+  onClickConfirm = () => {
+    const productSelected = this.props.history.location.state[0];
+    const numberProduct = this.props.history.location.state[1];
+    const { idOder } = this.props;
+    const detail = {
+      id_product: productSelected.Ma_SanPham,
+      amount: numberProduct,
+      id_donhang: idOder
+    }
+    this.props.addDataForOderDetail(detail);
+  }
+
+
+
   render() {
-    const { classes, farmList } = this.props;
+    const { classes, farmList, idOder } = this.props;
+    const { address, phoneNumber, name, notes } = this.state;
+    console.log("state", idOder);
     const productSelected = this.props.history.location.state[0];
     const numberProduct = this.props.history.location.state[1];
     const shopName = farmList.find(i => i.Ma_NongTrai === productSelected.Ma_NongTrai);
 
     return (
       <div className={classes.root}>
+        <Dialog
+          open={this.state.openConfirm}
+          maxWidth="xs"
+          fullWidth
+        >
+          <div style={{ width: "100%" }}>
+            <div style={{ padding: 50, margin: "0 auto" }}>
+              <label style={{ textAlign: "center", width: "100%", fontWeight: "bold" }}>
+                Thanh Toán Thành Công !!!
+              </label>
+            </div>
+          </div>
+          <DialogActions style={{ width: "100%", marginBottom: 20 }}>
+            <Button fullWidth style={{ width: "50%", margin: "0 auto" }} variant="contained" color="secondary" onClick={this.onClickConfirm}>
+              Xác Nhận
+            </Button>
+          </DialogActions>
+        </Dialog>
         <div className={classes.logo}>
           <div style={{ width: "20%", textAlign: "end", height: "inherit" }}>
             <img style={{ height: 100, lineHeight: "100px" }} alt="" src={logo} />
@@ -76,19 +141,21 @@ class BuyProduct extends React.Component {
             <div style={{ width: "100%", display: "flex" }}>
               <div style={{ width: "50%", padding: 20 }}>
                 <label style={{ float: "left" }}>Họ và tên</label>
-                <Input placeholder={"Nhập họ và tên"} />
+                <Input onChange={this.onChangeText} name="name" value={name} placeholder={"Nhập họ và tên"} />
                 <label style={{ float: "left", marginTop: 15 }}>Số điện thoại</label>
-                <Input placeholder={"Nhập số điện thoại nhận hàng"} />
+                <Input onChange={this.onChangeText} name="phoneNumber" value={phoneNumber} placeholder={"Nhập số điện thoại nhận hàng"} />
               </div>
               <div style={{ width: "50%", padding: 20 }}>
                 <label style={{ float: "left" }}>Địa chỉ</label>
-                <Input placeholder={"Nhập địa chỉ nhận hàng"} />
+                <Input onChange={this.onChangeText} name="address" value={address} placeholder={"Nhập địa chỉ nhận hàng"} />
+                <label style={{ float: "left", marginTop: 15 }}>Ghi Chú</label>
+                <Input onChange={this.onChangeText} name="notes" value={notes} placeholder={"Ghi chú"} />
               </div>
             </div>
 
-            <div style={{ width: "100%", textAlign: "end", marginBottom: 20 }}>
+            {/* <div style={{ width: "100%", textAlign: "end", marginBottom: 20 }}>
               <Button style={{ marginRight: 20 }} variant="contained" color="primary">Lưu</Button>
-            </div>
+            </div> */}
             {/**Thong tin goi hang */}
             <div style={{ width: "100%", textAlign: "start", marginTop: 20, paddingBottom: 20 }}>
               <div style={{ width: "100%", backgroundColor: "#fafafa", height: 50, lineHeight: "50px", display: "flex" }}>
@@ -176,7 +243,12 @@ class BuyProduct extends React.Component {
 
               <div style={{ width: "100%", marginTop: 15 }}>
                 <div style={{ width: "90%", margin: "0 auto" }}>
-                  <Button fullWidth style={{ backgroundColor: "orange", color: "#fff" }} variant="contained">
+                  <Button
+                    fullWidth
+                    style={{ backgroundColor: "orange", color: "#fff" }}
+                    variant="contained"
+                    onClick={this.onClickPay}
+                  >
                     Thanh Toán
                   </Button>
                 </div>
@@ -199,6 +271,7 @@ class BuyProduct extends React.Component {
 const mapStateToProps = state => {
   return {
     farmList: state.BuyProductReducer.farmList,
+    idOder: state.BuyProductReducer.idOder,
   };
 };
 
@@ -207,5 +280,7 @@ export default
     withStyles(useStyles),
     connect(mapStateToProps, {
       getListFarm,
+      createOder,
+      addDataForOderDetail,
     })
   )(BuyProduct);

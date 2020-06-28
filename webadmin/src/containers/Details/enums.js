@@ -7,7 +7,8 @@ const actions = {
   ADD_COMMENT: "ADD_COMMENT",
   RESET_COMMENT_LIST: "RESET_COMMENT_LIST",
   PRE_FETCH: "PRE_FETCH",
-  POST_FETCH: "POST_FETCH,"
+  POST_FETCH: "POST_FETCH",
+  ADD_TO_CARD: "ADD_TO_CARD",
 };
 
 export { actions };

@@ -7,6 +7,7 @@ const initialState = {
   listCustomer: [],
   customer: {},
   isLoading: false,
+  listBuyProduct: []
 };
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -19,13 +20,15 @@ export default (state = initialState, action) => {
     case actions.GET_LIST_CUSTOMER:
       return { ...state, listCustomer: action.payload }
     case actions.GET_CUSTOMER_BY_ID:
-      return { ...state, customer: action.payload }
+      return { ...state, customer: action.payload || []}
     case actions.RESET_COMMENT_LIST:
       return { ...state, comment: [] }
     case actions.PRE_FETCH:
       return { ...state, isLoading: true };
     case actions.POST_FETCH:
       return { ...state, isLoading: false };
+    case actions.ADD_TO_CARD:
+      return { ...state, listBuyProduct: action.payload }
     default:
       return state;
   }

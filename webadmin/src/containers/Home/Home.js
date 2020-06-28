@@ -96,10 +96,11 @@ class Home extends React.Component {
   };
 
   render() {
-    const { classes, listProduct, searchResult, activePage, listCategory, listSales } = this.props;
+    const { classes, listProduct, searchResult, activePage, listCategory, listSales, listBuyProduct } = this.props;
     const begin = (activePage - 1) * 10,
       end = begin + 10;
     const productInPage = searchResult.length !== 0 ? searchResult.slice(begin, end) : listProduct.slice(begin, end);
+    console.log("home", listBuyProduct)
     return (
       <div className={classes.root}>
         <div className={classes.header}>
@@ -203,6 +204,7 @@ const mapStateToProps = state => {
     activePage: state.HomeReducer.activePage,
     listCategory: state.Admin_CategoryReducer.listCategory,
     listSales: state.HomeReducer.listSales,
+    listBuyProduct: state.DetailReducer.listBuyProduct,
   };
 };
 

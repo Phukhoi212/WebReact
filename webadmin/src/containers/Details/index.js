@@ -9,6 +9,7 @@ import {
   getCustormerById,
   sendComment,
   resetCommentList,
+  updateAddToCard,
 } from "./actions";
 import { getListFarm } from "../BuyProduct/actions";
 import { withStyles, IconButton, Button, TextareaAutosize } from "@material-ui/core";
@@ -30,8 +31,9 @@ import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import AddToCardDialog from "./AddToCard";
 import "./Detail.css";
-import { get, includes } from "lodash";
+import { get } from "lodash";
 import moment from "moment";
 
 const useStyles = () => ({
@@ -186,6 +188,7 @@ class Detail extends React.Component {
     openLogin: false,
     commentText: "",
     listComment: [],
+    openAddToCard: false,
   }
 
   componentDidMount() {
@@ -266,13 +269,22 @@ class Detail extends React.Component {
     this.props.history.push({ pathname: `/shop/${product.Ma_NongTrai}`, state: product.Ma_NongTrai })
   }
 
+  onClickAddToCard = () => {
+    this.setState({
+      openAddToCard: true,
+      listBuy: [...this.state.listBuy, this.props.product]
+    }, () => {
+      this.props.updateAddToCard(this.state.listBuy);
+    })
+
+  }
+
   render() {
-    const { classes, product, comment, listCustomer, listFarm, customer, isLoading } = this.props;
+    console.log("listBuyProduct", this.props.listBuyProduct);
+    const { classes, product, listCustomer, listFarm, customer, isLoading, listBuyProduct } = this.props;
     const getFarm = listFarm.find(i => i.Ma_NongTrai === product.Ma_NongTrai);
-    const getComment = listCustomer.filter(cus => comment.find(i => i.Ma_KhachHang === cus.Ma_KhachHang));
-    const { number, like, openLogin, commentText, listComment } = this.state;
+    const { number, like, openLogin, commentText, listComment, openAddToCard, listBuy } = this.state;
     const alert = "Sản phẩm này là tài sản cá nhân được bán bởi Nhà Bán Hàng Cá Nhân và không thuộc đối tượng phải chịu thuế GTGT. Do đó hóa đơn VAT không được cấp trong trường hợp này."
-    console.log("---->customer", comment, getComment.find(i => i.Ma_KhachHang === comment.Ma_KhachHang))
 
     return (
       <div className={classes.root}>
@@ -281,6 +293,12 @@ class Detail extends React.Component {
           <UserLogin
             open={openLogin}
             onBackdropClick={() => this.setState({ openLogin: false })}
+          />
+          <AddToCardDialog
+            openAddToCard={openAddToCard}
+            onBackdropClick={() => this.setState({ openAddToCard: false })}
+            products={listBuyProduct}
+            count={number}
           />
           <div className={classes.container}>
             <div className={classes.left}>
@@ -353,6 +371,7 @@ class Detail extends React.Component {
                     style={{ marginLeft: 5, backgroundColor: "#f57224", color: "#fff" }}
                     fullWidth
                     variant="contained"
+                    onClick={this.onClickAddToCard}
                   >
                     Thêm vào giỏ hàng
                 </Button>
@@ -669,6 +688,7 @@ const mapStateToProps = state => {
     customer: state.DetailReducer.customer,
     listFarm: state.BuyProductReducer.farmList,
     isLoading: state.DetailReducer.isLoading,
+    listBuyProduct: state.DetailReducer.listBuyProduct,
   };
 };
 
@@ -684,5 +704,6 @@ export default
       getCustormerById,
       sendComment,
       resetCommentList,
+      updateAddToCard,
     })
   )(Detail);

@@ -3,22 +3,29 @@ import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
-import Box from '@material-ui/core/Box';
-import AppBar from '@material-ui/core/AppBar';
 import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListDashBoard from './listItems';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import PermMediaIcon from '@material-ui/icons/PermMedia';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import PeopleIcon from '@material-ui/icons/People';
+import BarChartIcon from '@material-ui/icons/BarChart';
+import LayersIcon from '@material-ui/icons/Layers';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
+import Admins from "../Manager/Admin";
+import Products from "../Manager/Product";
+import Employees from "../Manager/Employee";
 
 const drawerWidth = 240;
 
@@ -107,6 +114,7 @@ const useStyles = ((theme) => ({
 class Dashboard extends React.Component {
   state = {
     open: false,
+    index: 0,
   }
 
   handleDrawerOpen = () => {
@@ -114,16 +122,60 @@ class Dashboard extends React.Component {
       open: !this.state.open
     })
   };
+
   handleDrawerClose = () => {
     this.setState({
       open: false,
     })
   };
 
-  render() {
-    const { open } = this.state;
+  handleListItemClick = (event, indexOfList) => {
+    this.setState({
+      index: indexOfList
+    })
+  }
+
+  renderContainer = () => {
+    const { index } = this.state;
     const { classes } = this.props;
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+    let content = (<Grid container spacing={3}>
+      <Grid item xs={12} md={8} lg={9}>
+        <Paper className={fixedHeightPaper}>
+          <Chart />
+        </Paper>
+      </Grid>
+      <Grid item xs={12} md={4} lg={3}>
+        <Paper className={fixedHeightPaper}>
+          <Deposits />
+        </Paper>
+      </Grid>
+      <Grid item xs={12}>
+        <Paper className={classes.paper}>
+          <Orders />
+        </Paper>
+      </Grid>
+    </Grid>)
+    switch (index) {
+      case 1:
+        content = (<Admins />);
+        break;
+      case 2:
+        content = (<Products />);
+        break;
+      case 3:
+        content = (<Employees />);
+        break;
+      default:
+        return content;
+    }
+    return content
+  }
+
+  render() {
+    const { open, index } = this.state;
+    const { classes } = this.props;
+    console.log("====>index", index)
 
     return (
       <div className={classes.root}>
@@ -141,32 +193,66 @@ class Dashboard extends React.Component {
             </IconButton>
           </div>
           <Divider />
-          <List><ListDashBoard /></List>
+          <List>
+            <ListDashBoard
+              icon={<DashboardIcon />}
+              text="Dashboard"
+              handleListItemClick={(event) => this.handleListItemClick(event, 0)}
+            />
+            <ListDashBoard
+              icon={<SupervisorAccountIcon />}
+              text="Admins"
+              handleListItemClick={(event) => this.handleListItemClick(event, 1)}
+            />
+            <ListDashBoard
+              icon={<PermMediaIcon />}
+              text="Products"
+              handleListItemClick={(event) => this.handleListItemClick(event, 2)}
+            />
+            <ListDashBoard
+              icon={<AssignmentIcon />}
+              text="Employess"
+              handleListItemClick={(event) => this.handleListItemClick(event, 3)}
+            />
+            <ListDashBoard
+              icon={<DashboardIcon />}
+              text="Dashboard"
+              handleListItemClick={(event) => this.handleListItemClick(event, 4)}
+            />
+            <ListDashBoard
+              icon={<DashboardIcon />}
+              text="Dashboard"
+              handleListItemClick={(event) => this.handleListItemClick(event, 5)}
+            />
+            <ListDashBoard
+              icon={<DashboardIcon />}
+              text="Dashboard"
+              handleListItemClick={(event) => this.handleListItemClick(event, 6)}
+            />
+          </List>
           <Divider />
         </Drawer>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Container maxWidth="lg" className={classes.container}>
-            <Grid container spacing={3}>
-              {/* Chart */}
+            {/* <Grid container spacing={3}>
               <Grid item xs={12} md={8} lg={9}>
                 <Paper className={fixedHeightPaper}>
                   <Chart />
                 </Paper>
               </Grid>
-              {/* Recent Deposits */}
               <Grid item xs={12} md={4} lg={3}>
                 <Paper className={fixedHeightPaper}>
                   <Deposits />
                 </Paper>
               </Grid>
-              {/* Recent Orders */}
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
                   <Orders />
                 </Paper>
               </Grid>
-            </Grid>
+            </Grid> */}
+            {this.renderContainer()}
           </Container>
         </main>
       </div>

@@ -41,7 +41,8 @@ const useStyles = () => ({
   },
   bt_group: {
     textAlign: "end",
-    width: "20%",
+    width: "100%",
+    float: "right"
   },
   button: {
     color: "#fff",
@@ -89,6 +90,7 @@ class NavBarAdmin extends React.Component {
   };
 
   render() {
+    const Admin = localStorage.getItem("admin");
     const { classes, admin } = this.props;
     const { openLogin, anchorEl } = this.state;
     return (
@@ -107,7 +109,7 @@ class NavBarAdmin extends React.Component {
           <div className={classes.user}>
             <div className={classes.bt_group}>
               <div>
-                <Button onClick={this.onClickUser}>{admin}</Button>
+                <Button style={{color: "#fff"}} onClick={this.onClickUser}>{`Chào Admin  ${Admin}`}</Button>
                 <Menu
                   id="simple-menu"
                   anchorEl={anchorEl}

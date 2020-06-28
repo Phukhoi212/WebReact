@@ -9,6 +9,7 @@ import BuyProductReducer from "../containers/BuyProduct/reducers";
 import SalePageReducer from "../containers/SalePage/reducers";
 import Admin_ProductReducer from "../containers/Manager/Product/reducers";
 import Admin_CategoryReducer from "../containers/Manager/Category/reducers";
+import Admin_EmployReducer from "../containers/Manager/Employee/reducers";
 import SessionReducer from "./SessionReducer";
 import LoginReducer from "./LoginReducer";
 import UserLoginReducer from "../containers/UserLogin/reducers";
@@ -25,6 +26,7 @@ const myReducer = combineReducers({
     BuyProductReducer,
     Admin_ProductReducer,
     Admin_CategoryReducer,
+    Admin_EmployReducer,
     SessionReducer,
     LoginReducer,
     UserLoginReducer,

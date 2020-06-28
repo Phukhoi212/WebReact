@@ -39,6 +39,7 @@ class Login extends React.Component {
   onSubmitLogin = (e) => {
     e.preventDefault();
     this.props.submitLogin(this.state.userName, this.state.password);
+    this.props.history.push('/manager/dashboard');
   }
 
   render() {
