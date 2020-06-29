@@ -189,6 +189,7 @@ class Employees extends React.Component {
           content={content}
           onClose={() => this.setState({ openDialog: false })}
           Confirm={this.onClickAddNewAdmin}
+          actions={true}
         />
         <ConfirmDialog
           title={`Bạn có muốn xóa admin `}

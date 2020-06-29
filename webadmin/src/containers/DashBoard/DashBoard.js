@@ -1,5 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
+import compose from "recompose/compose";
+import { connect } from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -16,12 +18,15 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import PermMediaIcon from '@material-ui/icons/PermMedia';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import HouseIcon from '@material-ui/icons/House';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
 import Admins from "../Manager/Admin";
 import Products from "../Manager/Product";
 import Employees from "../Manager/Employee";
+import Farms from "../Manager/Farm";
+import { getListBills } from "./actions";
 
 const drawerWidth = 240;
 
@@ -113,6 +118,10 @@ class Dashboard extends React.Component {
     index: 0,
   }
 
+  componentDidMount() {
+    this.props.getListBills();
+  }
+
   handleDrawerOpen = () => {
     this.setState({
       open: !this.state.open
@@ -148,7 +157,7 @@ class Dashboard extends React.Component {
       </Grid>
       <Grid item xs={12}>
         <Paper className={classes.paper}>
-          <Orders />
+          <Orders data={this.props.listBills} />
         </Paper>
       </Grid>
     </Grid>)
@@ -162,6 +171,9 @@ class Dashboard extends React.Component {
       case 3:
         content = (<Employees />);
         break;
+      case 4:
+        content = (<Farms />);
+        break;
       default:
         return content;
     }
@@ -171,7 +183,7 @@ class Dashboard extends React.Component {
   render() {
     const { open } = this.state;
     const { classes } = this.props;
-
+    console.log("listBills", this.props.listBills)
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -201,17 +213,17 @@ class Dashboard extends React.Component {
             />
             <ListDashBoard
               icon={<PermMediaIcon />}
-              text="Products"
+              text="Sản Phẩm"
               handleListItemClick={(event) => this.handleListItemClick(event, 2)}
             />
             <ListDashBoard
               icon={<AssignmentIcon />}
-              text="Employess"
+              text="Nhân Viên"
               handleListItemClick={(event) => this.handleListItemClick(event, 3)}
             />
             <ListDashBoard
-              icon={<DashboardIcon />}
-              text="Dashboard"
+              icon={<HouseIcon />}
+              text="Nông Trại"
               handleListItemClick={(event) => this.handleListItemClick(event, 4)}
             />
             <ListDashBoard
@@ -237,4 +249,16 @@ class Dashboard extends React.Component {
     );
   }
 }
-export default withStyles(useStyles)(Dashboard);
+const mapStateToProps = state => {
+  return {
+    listBills: state.DashboardReducer.listBills,
+  };
+};
+
+export default
+  compose(
+    withStyles(useStyles),
+    connect(mapStateToProps, {
+      getListBills,
+    })
+  )(Dashboard);

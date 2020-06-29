@@ -129,7 +129,7 @@ class Admin_Product extends React.Component {
           enctype="multipart/form-data"
         >
           <InputComponent
-            label={"Mã Admin"}
+            label={"Mã Sản Phẩm"}
             disabled={true}
             value={type === "edit" ? product.Ma_SanPham : ""}
             name=""
@@ -177,7 +177,7 @@ class Admin_Product extends React.Component {
           <img alt="" src={type === "edit" ? product.Image_Url : file} style={{ width: "8rem" }} />
           <div>
             <Button variant="contained" color="secondary" onClick={() => this.setState({ openDialog: false })}>Hủy</Button>
-            <Button variant="contained" color="primary" type="submit">Thêm Mới</Button>
+            <Button style={{marginLeft: 20}} variant="contained" color="primary" type="submit">Thêm Mới</Button>
           </div>
         </form>
       </Paper>

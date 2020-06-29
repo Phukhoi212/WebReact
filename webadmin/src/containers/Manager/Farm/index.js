@@ -1,7 +1,7 @@
 import React from 'react';
 import MaterialTable from 'material-table';
 import { withStyles } from "@material-ui/core/styles";
-import { getListAdmin, getAdminById, deleteAdminById, createAdmin, updateAdminById } from "./actions";
+import { getListFarms } from "./actions";
 import compose from "recompose/compose";
 import { connect } from "react-redux";
 import DialogComponent from "../../../components/Dialog";
@@ -10,19 +10,15 @@ import Input from "../../../components/Input";
 import { Button, Paper } from "@material-ui/core";
 
 const columns = [
-  { title: 'Tên Admin', field: 'Ten_AD' },
-  { title: 'Email', field: 'Email' },
-  { title: 'Ngày Sinh', field: 'NgaySinh' },
+  { title: 'Tên Nông Trại', field: 'TenNongTrai' },
   { title: 'Số Điện Thoại', field: 'SDT' },
   { title: 'Địa Chỉ', field: 'DiaChi' },
-  { title: 'Tên Đăng Nhập', field: 'TenDangNhap' },
-  { title: 'Mật Khẩu', field: 'MatKhau' },
+  { title: 'Mã Admins', field: 'Ma_AD' },
 ];
 
 const initialState = {
   id: "",
   name: "",
-  email: "",
   birthYear: "",
   phoneNumber: "",
   address: "",
@@ -42,19 +38,19 @@ const useStyles = () => ({
   }
 })
 
-class Admin extends React.Component {
+class Farms extends React.Component {
   constructor(props) {
     super(props);
     this.state = initialState
   }
 
   componentDidMount() {
-    this.props.getListAdmin();
+    this.props.getListFarms();
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      data: nextProps.adminList,
+      data: nextProps.listFarm,
     })
   }
 
@@ -75,7 +71,6 @@ class Admin extends React.Component {
     this.setState({
       openDialog: true,
       type: "edit",
-      id: id,
     }, () => this.props.getAdminById(id));
   }
 
@@ -112,98 +107,61 @@ class Admin extends React.Component {
     this.setState({ openDialog: false, openNotification: true })
   }
 
-  onCloseForm = () => {
-    this.setState({
-      id: "",
-      name: "",
-      email: "",
-      birthYear: "",
-      phoneNumber: "",
-      address: "",
-      userName: "",
-      password: "",
-      type: "",
-      openDialog: false
-    })
-  }
-
-  onUpdateAdmin = () => {
-    const { id } = this.state;
-    const { admin } = this.props;
-    const Admin = {
-      Ten_AD: this.state.name || admin.Ten_AD,
-      Email: this.state.email || admin.Email,
-      NgaySinh: this.state.birthYear || admin.NgaySinh,
-      DiaChi: this.state.address || admin.DiaChi,
-      SDT: this.state.phoneNumber || admin.SDT,
-      TenDangNhap: this.state.userName || admin.TenDangNhap,
-      MatKhau: this.state.password || admin.MatKhau,
-    }
-    this.props.updateAdminById(id, Admin);
-    this.setState({ openDialog: false, openNotification: true })
-  }
-
   render() {
-    const { admin, classes } = this.props;
-    const { openConfirmDialog, name, email, birthYear, address, phoneNumber, userName, password, type } = this.state;
-    const content =
-      <Paper style={{ padding: "1rem" }}>
-        <Input
-          label={"Mã Admin"}
-          disabled={true}
-          value={type === "add" ? "" : admin.Ma_AD}
-          name=""
-        />
-        <Input
-          label="Tên"
-          value={type === "add" ? name : (name || admin.Ten_AD)}
-          name="name"
-          onChange={this.onChangeTextValue}
-        />
-        <Input
-          label="Email"
-          value={type === "add" ? email : (email || admin.Email)}
-          name="email"
-          onChange={this.onChangeTextValue}
-        />
-        <Input
-          label="Ngày Sinh"
-          value={type === "add" ? birthYear : (birthYear || admin.NgaySinh)}
-          onChange={this.onChangeTextValue}
-          name="birthYear"
-        />
-        <Input
-          label="Số Điện Thoại"
-          value={type === "add" ? phoneNumber : (phoneNumber || admin.SDT)}
-          onChange={this.onChangeTextValue}
-          name="phoneNumber"
-        />
-        <Input
-          label="Địa Chỉ"
-          value={type === "add" ? address : (address || admin.DiaChi)}
-          onChange={this.onChangeTextValue}
-          name="address"
-        />
-        <Input
-          label="Tên Đăng Nhập"
-          value={type === "add" ? userName : (userName || admin.TenDangNhap)}
-          onChange={this.onChangeTextValue}
-          name="userName"
-        />
-        <Input
-          label="Mật Khẩu"
-          value={type === "add" ? password : (password || admin.MatKhau)}
-          onChange={this.onChangeTextValue}
-          name="password"
-        />
-      </Paper>
+    const { classes } = this.props;
+    const { openConfirmDialog, name } = this.state;
+    // const content =
+    //   <Paper style={{ padding: "1rem" }}>
+    //     <Input
+    //       label={"Mã Nhân Viên"}
+    //       disabled={true}
+    //       value={employ.Ma_NV}
+    //       name=""
+    //     />
+    //     <Input
+    //       label="Tên Nhân Viên"
+    //       value={employ.Ten_NV}
+    //       name="name"
+    //       onChange={this.onChangeTextValue}
+    //     />
+    //     <Input
+    //       label="Ngày Sinh"
+    //       value={employ.NgaySinh}
+    //       onChange={this.onChangeTextValue}
+    //       name="birthYear"
+    //     />
+    //     <Input
+    //       label="Số Điện Thoại"
+    //       value={employ.SDT}
+    //       onChange={this.onChangeTextValue}
+    //       name="phoneNumber"
+    //     />
+    //     <Input
+    //       label="Địa Chỉ"
+    //       value={employ.DiaChi}
+    //       onChange={this.onChangeTextValue}
+    //       name="address"
+    //     />
+    //     <Input
+    //       label="Tên Đăng Nhập"
+    //       value={employ.TenDangNhap}
+    //       onChange={this.onChangeTextValue}
+    //       name="userName"
+    //     />
+    //     <Input
+    //       label="Mật Khẩu"
+    //       value={employ.MatKhau}
+    //       onChange={this.onChangeTextValue}
+    //       name="password"
+    //     />
+    //   </Paper>
     return (
       <div>
         <div className={classes.btn_Them}>
           <Button variant="contained" color="primary" onClick={this.onClickAddButton}>Thêm</Button>
         </div>
         <MaterialTable
-          title="Danh Sách Admin"
+          title="Danh Sách Nhân Viên"
           columns={columns}
           data={this.state.data}
           actions={[
@@ -225,10 +183,10 @@ class Admin extends React.Component {
           open={this.state.openDialog}
           onBackdropClick={() => this.setState({ openDialog: false })}
           type={this.state.type}
-          content={content}
-          onClose={this.onCloseForm}
-          Confirm={type === "add" ? this.onClickAddNewAdmin : this.onUpdateAdmin}
-          actions={true}
+          //content={content}
+          onClose={() => this.setState({ openDialog: false })}
+          Confirm={this.onClickAddNewAdmin}
+          //actions={true}
         />
         <ConfirmDialog
           title={`Bạn có muốn xóa admin `}
@@ -245,8 +203,7 @@ class Admin extends React.Component {
 }
 const mapStateToProps = state => {
   return {
-    adminList: state.AdminReducer.adminList,
-    admin: state.AdminReducer.admin,
+    listFarm: state.Admin_FarmReducer.listFarm,
   };
 };
 
@@ -254,10 +211,7 @@ export default
   compose(
     withStyles(useStyles),
     connect(mapStateToProps, {
-      getListAdmin,
-      getAdminById,
-      deleteAdminById,
-      createAdmin,
-      updateAdminById,
+        getListFarms,
+
     })
-  )(Admin);
+  )(Farms);

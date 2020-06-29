@@ -6,7 +6,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Input from "../../components/Input";
-import { Button } from "@material-ui/core";
+import { Button, TextField } from "@material-ui/core";
 import FacebookIcon from '@material-ui/icons/Facebook';
 import "./login.css";
 import { userLogin } from "./actions";
@@ -29,7 +29,8 @@ const useStyles = () => ({
     paddingTop: 20
   },
   text: {
-    fontSize: 12
+    fontSize: 12,
+    width: "100%"
   },
 });
 
@@ -52,6 +53,7 @@ class UserLogin extends React.Component {
       username: "",
       password: ""
     })
+    this.forceUpdate();
   }
 
   render() {
@@ -71,13 +73,18 @@ class UserLogin extends React.Component {
                     name="username"
                     onChange={this.onChangeValue}
                   />
-                  <label className={classes.text}>Mật khẩu</label>
-                  <Input
-                    name="password"
-                    value={password}
-                    onChange={this.onChangeValue}
-                    type="password"
-                  />
+                  <div style={{display: "block"}}>
+                    <label className={classes.text}>Mật khẩu</label>
+                    <TextField
+                      className="textField"
+                      name="password"
+                      value={password}
+                      onChange={this.onChangeValue}
+                      type="password"
+                      variant="outlined"
+                    />
+                  </div>
+
                 </div>
                 <div className={classes.right}>
                   <Button

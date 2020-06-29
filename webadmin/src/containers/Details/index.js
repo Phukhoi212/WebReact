@@ -32,6 +32,8 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AddToCardDialog from "./AddToCard";
+import Header from "../../components/Header";
+import Card from "../../components/Card";
 import "./Detail.css";
 import { get } from "lodash";
 import moment from "moment";
@@ -174,9 +176,15 @@ const useStyles = () => ({
   },
   right_info: {
     width: "20%",
-    height: "3rem",
-    backgroundColor: "red"
-  }
+    height: "auto",
+  },
+  header: {
+    display: "block",
+    marginBottom: 25,
+    height: 150,
+    backgroundColor: "#fff",
+    textAlign: "center"
+  },
 })
 
 
@@ -189,6 +197,7 @@ class Detail extends React.Component {
     commentText: "",
     listComment: [],
     openAddToCard: false,
+    keywordSearch: "",
   }
 
   componentDidMount() {
@@ -284,11 +293,13 @@ class Detail extends React.Component {
   }
 
   render() {
-    const { classes, product, listCustomer, listFarm } = this.props;
+    const { classes, product, listCustomer, listFarm, listBuyProduct, listProduct } = this.props;
     const getFarm = listFarm.find(i => i.Ma_NongTrai === product.Ma_NongTrai);
-    const { number, like, openLogin, commentText, listComment, openAddToCard } = this.state;
+    const { number, like, openLogin, commentText, listComment, openAddToCard, keywordSearch } = this.state;
     const alert = "Sản phẩm này là tài sản cá nhân được bán bởi Nhà Bán Hàng Cá Nhân và không thuộc đối tượng phải chịu thuế GTGT. Do đó hóa đơn VAT không được cấp trong trường hợp này."
     const userId = localStorage.getItem("userId");
+    const listProductCut = listProduct.slice(0, 3);
+    console.log("listProductCut", listProductCut)
 
     return (
       <div className={classes.root}>
@@ -304,6 +315,9 @@ class Detail extends React.Component {
             products={product}
             count={number}
           />
+          <div className={classes.header}>
+            <Header search={keywordSearch} countProductOfCard={listBuyProduct.length} />
+          </div>
           <div className={classes.container}>
             <div className={classes.left}>
               <div className={classes.image}>
@@ -520,7 +534,19 @@ class Detail extends React.Component {
                 </div>
               </div>
             </div>
-            <div className={classes.right_info}></div>
+            <div className={classes.right_info}>
+              {listProductCut.map(card => (
+                <Card
+                  key={card.Ma_SanPham}
+                  src={card.Image_Url}
+                  name={card.TenSanPham}
+                  price={card.GiaSanPham}
+                  id={card.Ma_SanPham}
+                  style={{ width: "14rem !important" }}
+                />
+              ))}
+
+            </div>
             {/*Danh gia san pham*/}
           </div>
           <div className={classes.rating_and_comment}>
@@ -642,7 +668,16 @@ class Detail extends React.Component {
 
 
               </div>
-              <div className={classes.right_info}></div>
+              <div className={classes.right_info}>
+                {/* <Card
+                  key={product.Ma_SanPham}
+                  src={product.Image_Url}
+                  name={product.TenSanPham}
+                  price={product.GiaSanPham}
+                  id={product.Ma_SanPham}
+                  style={{ width: "14rem !important" }}
+                /> */}
+              </div>
 
             </div>
 

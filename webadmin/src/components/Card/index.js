@@ -26,7 +26,7 @@ const useStyles = ({
 });
 
 class CardComponent extends React.Component {
-  format_curency = ((money) => {
+  format_curency = (money => {
     money = money.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
     return money;
   });
@@ -60,7 +60,7 @@ class CardComponent extends React.Component {
               <label style={{ color: "red", fontWeight: "bold", fontSize: 12, width: "100%" }}>Sale: {this.props.km}</label>
               : ""}
 
-            <label style={{ fontSize: 18, color: "orange" }}>{format_curency(this.props.price)}</label>
+            <label style={{ fontSize: 18, color: "orange" }}>{this.props.price}</label>
           </div>
         </div>
       </Card>

@@ -8,6 +8,7 @@ import Pagination from "react-js-pagination";
 import CardComponent from "../../components/Card";
 import Footer from "../../components/Footer";
 import { get } from "lodash";
+import { Button } from "@material-ui/core";
 
 const useStyles = () => ({
   root: {
@@ -30,8 +31,8 @@ const useStyles = () => ({
     display: "block",
     marginBottom: 25,
     height: 150,
-    backgroundColor: "#fff",
-    textAlign: "center"
+    backgroundColor: "#000",
+    textAlign: "start"
   },
   footer: {
   },
@@ -74,7 +75,6 @@ class ShopDetail extends React.Component {
 
   render() {
     const { classes, listProduct, activePage, farmInfo, adminList } = this.props;
-    console.log("farminfo", farmInfo)
     const itemInPage = 10;
     const begin = (activePage - 1) * itemInPage,
       end = begin + itemInPage;
@@ -84,16 +84,18 @@ class ShopDetail extends React.Component {
       <div className={classes.root}>
         <div className={classes.header}>
           <div>
-            <label>Tên Nông Trại: {farmInfo.TenNongTrai}</label>
-          </div>
-          <div>
-            <label>Chủ Nông Trại: {get(getAdmin, "Ten_AD", "")}</label>
-          </div>
-          <div>
-            <label>Số Điện Thoại: {farmInfo.SDT}</label>
-          </div>
-          <div>
-            <label>Địa Chỉ: {farmInfo.DiaChi}</label>
+            <div>
+              <label style={{ color: "#fff", fontWeight: "bold", fontSize: 16 }}>Tên Nông Trại: {farmInfo.TenNongTrai}</label>
+            </div>
+            <div>
+              <label style={{ color: "#fff", marginLeft: 92 }}>Chủ Nông Trại: {get(getAdmin, "Ten_AD", "")}</label>
+            </div>
+            <div>
+              <label style={{ color: "#fff", marginLeft: 92 }}>Số Điện Thoại: {farmInfo.SDT}</label>
+            </div>
+            <div>
+              <label style={{ color: "#fff", marginLeft: 92 }}>Địa Chỉ: {farmInfo.DiaChi}</label>
+            </div>
           </div>
 
         </div>
@@ -101,6 +103,7 @@ class ShopDetail extends React.Component {
           <div className={classes.result}>
             <div>
               <label style={{ fontWeight: "bold" }}>SẢN PHẨM CỦA SHOP</label>
+              <Button style={{ marginLeft: 50, color: "blue" }} onClick={() => this.props.history.goBack()}>{`<<< Back `}</Button>
             </div>
             <div style={{ width: "100%" }}>
               <div className={classes.list}>

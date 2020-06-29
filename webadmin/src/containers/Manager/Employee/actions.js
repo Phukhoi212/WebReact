@@ -33,8 +33,8 @@ export const deleteAdminById = id => async dispatch => {
   }
 };
 
-export const createAdmin = (admin, resetState) => async dispatch => {
-  const response = await apis.post(EMPLOYEES_URL, admin);
+export const createEmployee = (employ, resetState) => async dispatch => {
+  const response = await apis.post(EMPLOYEES_URL, employ);
   const { status } = response;
   if (status === 200) {
     if (typeof resetState === "function") resetState();

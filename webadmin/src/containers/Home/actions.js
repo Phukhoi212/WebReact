@@ -43,3 +43,7 @@ export const getListProductSale = () => async dispatch => {
     });
   }
 };
+
+export const resetActiePage = ()  => ({
+    type: actions.RESET_ACTIVE_PAGE,
+});
